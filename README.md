@@ -2,8 +2,9 @@
 
 # task to be completed
 
-- User Management/Registration
-- Login/logout
-- update post
-- delete post
+- User Management/Registration -- completed
+- Login/logout -- completed
+- User Upload image/ change -- completed
+- update post --- completed
+- delete post --- completed
 
