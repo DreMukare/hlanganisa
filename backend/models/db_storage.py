@@ -1,7 +1,11 @@
+import io
+import base64
 import models
+import secrets
+from PIL import Image
 from models.base_model import BaseModel, Base
 from models.user import User
-from os import getenv
+from os import getenv, path
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 
@@ -10,7 +14,7 @@ classes = {"Amenity": Amenity, "City": City,
 
 
 class DBStorage:
-    """interaacts with the MySQL database"""
+    """interacts with the MySQL database"""
     __engine = None
     __session = None
 
@@ -93,3 +97,53 @@ class DBStorage:
             count = len(models.storage.all(cls).values())
 
         return count
+
+
+class ImageStorage:
+    """Handles storing and retrieving images"""
+    def generate_path(type, user_id, root_path, image_no):
+        """Generate the path for the image to be stored depending on whether it
+           is a profile photo or a work sample photo
+        Args:
+            type (str): profile or work, denoting what kind of image is being
+                        stored
+            user_id (str): id of user associated with the files
+            root_path (str): api's root path
+            image_no (int): image number for work images
+        """
+        #random_hex = secrets.token_hex(8)
+        #_, f_ext = os.path.splitext(form_picture.filename)
+        #picture_fn = random_hex + f_ext
+        #picture_path = os.path.join(app.root_path, 'static/profile_pics', picture_fn)
+        #return picture_fn
+        if type == 'profile':
+            image_path = os.path.join(root_path, 'profile_pics', user_id)
+        elif type == 'work':
+            image_path = os.path.join(root_path, 'work_images',
+                                      user_id, f'image_{image_no}')
+        return image_path
+
+    def save_image(image_size, image_path, image):
+        """Generates a thumbnail of the required size and saves it at
+           the path given
+           Args:
+               image_size (int): size of the thumbnail to be generated
+               image_path (int): path to store image at
+               image (binary): the image file
+        """
+        output_size = (image_size, image_size)
+        i = Image.open(image)
+        i.thumbnail(output_size)
+        i.save(image_path, "JPEG")
+
+    def get_image(image_path):
+        """Retrieve an image from file storage and return it"""
+        with open(image_path, 'rb') as image:
+            image = image.read()
+        return image
+
+    def process_incoming_image(image_file):
+        """Process an image that's been received from the client"""
+        image_bytes = base64.b64decode(image_file.encode('utf-8'))
+        img = io.BytesIO(image_byts)
+        return img
