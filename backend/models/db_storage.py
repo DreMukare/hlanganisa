@@ -1,16 +1,19 @@
 import io
+import json
+import redis
+import uuid
 import base64
 import models
-import secrets
+from datetime import timedelta
 from PIL import Image
 from models.base_model import BaseModel, Base
 from models.user import User
-from os import getenv, path
+from models.post import Post
+from os import getenv, path, listdir
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 
-classes = {"Amenity": Amenity, "City": City,
-           "Place": Place, "Review": Review, "State": State, "User": User}
+classes = {"User": User, "Post": Post}
 
 
 class DBStorage:
@@ -20,17 +23,17 @@ class DBStorage:
 
     def __init__(self):
         """Instantiate a DBStorage object"""
-        HBNB_MYSQL_USER = getenv('HBNB_MYSQL_USER')
-        HBNB_MYSQL_PWD = getenv('HBNB_MYSQL_PWD')
-        HBNB_MYSQL_HOST = getenv('HBNB_MYSQL_HOST')
-        HBNB_MYSQL_DB = getenv('HBNB_MYSQL_DB')
-        HBNB_ENV = getenv('HBNB_ENV')
+        MY_USER = getenv('MY_USER') or 'root'
+        PWD = getenv('PWD')
+        HOST = getenv('HOST') or '127.0.0.1'
+        DB = getenv('DB') or 'hlanganisa'
+        ENV = getenv('ENV')
         self.__engine = create_engine('mysql+mysqldb://{}:{}@{}/{}'.
-                                      format(HBNB_MYSQL_USER,
-                                             HBNB_MYSQL_PWD,
-                                             HBNB_MYSQL_HOST,
-                                             HBNB_MYSQL_DB))
-        if HBNB_ENV == "test":
+                                      format(MY_USER,
+                                             PWD,
+                                             HOST,
+                                             DB))
+        if ENV == "test":
             Base.metadata.drop_all(self.__engine)
 
     def all(self, cls=None):
@@ -101,7 +104,7 @@ class DBStorage:
 
 class ImageStorage:
     """Handles storing and retrieving images"""
-    def generate_path(type, user_id, root_path, image_no):
+    def generate_path(self, type, user_id, root_path, image_no=0):
         """Generate the path for the image to be stored depending on whether it
            is a profile photo or a work sample photo
         Args:
@@ -111,19 +114,14 @@ class ImageStorage:
             root_path (str): api's root path
             image_no (int): image number for work images
         """
-        #random_hex = secrets.token_hex(8)
-        #_, f_ext = os.path.splitext(form_picture.filename)
-        #picture_fn = random_hex + f_ext
-        #picture_path = os.path.join(app.root_path, 'static/profile_pics', picture_fn)
-        #return picture_fn
         if type == 'profile':
-            image_path = os.path.join(root_path, 'profile_pics', user_id)
+            image_path = path.join(root_path, 'profile_pics', user_id)
         elif type == 'work':
-            image_path = os.path.join(root_path, 'work_images',
-                                      user_id, f'image_{image_no}')
+            image_path = path.join(root_path, 'work_images',
+                                   user_id, f'image_{image_no}')
         return image_path
 
-    def save_image(image_size, image_path, image):
+    def save_image(self, image_size, image_path, image):
         """Generates a thumbnail of the required size and saves it at
            the path given
            Args:
@@ -136,14 +134,60 @@ class ImageStorage:
         i.thumbnail(output_size)
         i.save(image_path, "JPEG")
 
-    def get_image(image_path):
+    def get_image(self, image_path):
         """Retrieve an image from file storage and return it"""
         with open(image_path, 'rb') as image:
             image = image.read()
+        image = base64.b64encode(image).decode('utf-8')
         return image
 
-    def process_incoming_image(image_file):
+    def process_incoming_image(self, image_file):
         """Process an image that's been received from the client"""
         image_bytes = base64.b64decode(image_file.encode('utf-8'))
-        img = io.BytesIO(image_byts)
+        img = io.BytesIO(image_bytes)
         return img
+
+    def get_images(self, image_folder_path):
+        """
+        Retrieves all the images stored in the directory given
+        Args:
+           image_folder_path (str): path to dir containing required images
+        Return:
+            List of image objects
+        """
+        images = []
+        file_names = list_dir(image_folder_path)
+        for name in file_names:
+            image_path = path.join(image_folder_path, name)
+            images.append(self.get_image(image_path))
+        return images
+
+
+class RedisCache:
+    """
+    Create a redis cache system
+    """
+    def __init__(self):
+        """
+        Create an instance of a Redis Client and flush it using flushdb
+        """
+        self._redis = redis.Redis()
+        self._redis.flushdb()
+
+    def store(self, data, expire=timedelta(hours=24)) -> str:
+        """
+        Store data and return key to access the data
+        """
+        key = str(uuid.uuid4())
+        self._redis.setex(key, expire, data)
+        return key
+
+    def get(self, key):
+        """
+        Retrieve a stored value using the given key and returns it as
+        a json object
+        """
+        data = self._redis.get(key)
+        if data is not None:
+            data = json.loads(data.decode('utf-8'))
+        return data

@@ -2,11 +2,11 @@
 """
 Base Model class from hich all other models inherit from
 """
-
-from datatime import datetime
+import models
+import uuid
+from datetime import datetime
 from sqlalchemy import Column, String, DateTime
 from sqlalchemy.ext.declarative import declarative_base
-import uuid
 
 Base = declarative_base()
 
@@ -43,34 +43,34 @@ class BaseModel:
             self.created_at = datetime.utcnow()
             self.updated_at = self.created_at
 
-        def __str__(self):
-            """
-            Returns a string representation of an instance of the
-            BaseModel class
-            """
-            s = f"[{self.__class__.__name__} ({self.id}): {self.__dict__}]"
-            return s
+    def __str__(self) -> str:
+        """
+        Returns a string representation of an instance of the
+        BaseModel class
+        """
+        s = f"[{self.__class__.__name__} ({self.id}): {self.__dict__}]"
+        return s
 
-        def save(self):
-            """
-            Save an instance to the database
-            """
-            self.updated_at = datetime.utcnow()
-            models.storage.new(self)
-            models.storage.save()
+    def save(self):
+        """
+        Save an instance to the database
+        """
+        self.updated_at = datetime.utcnow()
+        models.storage.new(self)
+        models.storage.save()
 
-        def to_dict(self, save_fs=None):
-            """returns a dict containing all keys/values of the instance"""
-            new_dict = self.__dict__.copy()
-            if "created_at" in new_dict:
-                new_dict["created_at"] = new_dict["created_at"].strftime(time)
-            if "updated_at" in new_dict:
-                new_dict["updated_at"] = new_dict["updated_at"].strftime(time)
-            new_dict["__class__"] = self.__class__.__name__
-            if "_sa_instance_state" in new_dict:
-                del new_dict["_sa_instance_state"]
-            return new_dict
+    def to_dict(self, save_fs=None) -> dict:
+        """ returns a dict containing all keys/values of the instance """
+        new_dict = self.__dict__.copy()
+        if "created_at" in new_dict:
+            new_dict["created_at"] = new_dict["created_at"].strftime(time)
+        if "updated_at" in new_dict:
+            new_dict["updated_at"] = new_dict["updated_at"].strftime(time)
+        new_dict["__class__"] = self.__class__.__name__
+        if "_sa_instance_state" in new_dict:
+            del new_dict["_sa_instance_state"]
+        return new_dict
 
-        def delete(self):
-            """Delete the current instance from storage"""
-            models.storage.delete(self)
+    def delete(self):
+        """Delete the current instance from storage"""
+        models.storage.delete(self)
