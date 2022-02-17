@@ -1,0 +1,7 @@
+Pillow
+bcrypt
+Pillow==8.4.0
+mysqlclient
+sqlalchemy==1.4.31
+redis
+Flask

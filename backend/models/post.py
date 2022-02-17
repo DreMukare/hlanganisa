@@ -4,7 +4,7 @@ Holds class Post, representing different requests and reviews posted by clients
 """
 import models
 from models.base_model import BaseModel, Base
-from sqlalchemy import Column, String, Text, Float
+from sqlalchemy import Column, String, Text, Float, ForeignKey
 
 
 class Post(BaseModel, Base):
@@ -13,6 +13,8 @@ class Post(BaseModel, Base):
     clients
     """
     __tablename__ = 'posts'
-    type = Column(String(20), nullable=False)  # could be a review of a service provider, or a request for a service
+    # could be a review of a service provider, or a request for a service
+    type = Column(String(20), nullable=False)
     content = Column(Text, nullable=False, default="No Content")
     rating = Column(Float)
+    user_id = Column(String(60), ForeignKey('users.id'), nullable=False)
