@@ -5,6 +5,10 @@ module.exports = {
 	],
 	theme: {
 		extend: {},
+		fontFamily: {
+			main: ['Merriweather Sans', 'sans-serif'],
+			secondary: ['Lato', 'sans-serif'],
+		},
 	},
 	plugins: [],
 };
