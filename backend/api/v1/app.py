@@ -4,6 +4,7 @@ Flask Application
 """
 
 from os import environ, makedirs, path
+import secrets
 from flask import Flask, jsonify, make_response
 from api.v1.views import app_views
 from models import storage

@@ -2,6 +2,10 @@
 """
 Define a User class.
 """
+import datetime
+
+import jwt
+from api.v1 import app  
 import models
 import bcrypt
 from models.base_model import BaseModel, Base
@@ -46,3 +50,36 @@ class User(BaseModel, Base):
             new_dict.pop('work_images', None)
 
         return new_dict
+    def encode_auth_token(self, user_id):
+        """
+    Generates the Auth Token
+    :return: string
+    """
+        try:
+            payload = {
+                'sub': self.user_id,
+                'iat': datetime.datetime.utcnow(),
+                'jti': self.email,
+                'exp': datetime.datetime.utcnow() + datetime.timedelta(days=0, hours=4),
+ 
+            }
+            return jwt.encode(
+                payload,
+                app.config.get('SECRET_KEY'),
+                algorithm='HS256'
+            )
+        except:
+            return {'message': "Failed to authenticate"}
+    
+    @staticmethod
+    def decode_auth_token(auth_token):
+        """
+        Decodes the auth token
+        :param auth_token:
+        :return: user_id
+        """
+        try:
+            payload = jwt.decode(auth_token, app.config.get('SECRET_KEY'))
+            return payload['sub']
+        except jwt.ExpiredSignatureError:
+            return 'Signature expired. Please log in again.'
