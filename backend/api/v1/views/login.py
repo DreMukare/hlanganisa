@@ -14,7 +14,7 @@ import datetime
 from functools import wraps #
 
 app.config['SECRET_KEY'] =  '71926b520c54bcac05e993951d554612'
-
+"""
 def token_required(f):
 	@wraps(f)
 	def decorated(*args, **kwargs):
@@ -27,11 +27,11 @@ def token_required(f):
 	     		return jsonify({'message' : 'Token is invalid!'}), 403
 		return f(*args, **kwargs)
 	return decorated
-
+"""
 @app.route('/login')
-@token_required
 def login():
-	auth = request.authorization
+
+	auth = request.authorization # check if username and password is passed
 
 	if auth and auth.password == storage.get(User, user_id)
 		token = jwt.encode({'user' : auth.username, 'exp' : datetime.datetime.utcnow() + datetime.timedelta(hour=24)})
