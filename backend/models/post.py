@@ -16,5 +16,6 @@ class Post(BaseModel, Base):
     # could be a review of a service provider, or a request for a service
     type = Column(String(20), nullable=False)
     content = Column(Text, nullable=False, default="No Content")
-    rating = Column(Float)
+    rating = Column(Float, default=0.0)
     user_id = Column(String(60), ForeignKey('users.id'), nullable=False)
+    #other_id = Column(String(60), ForeignKey('users.id'), nullable=False)

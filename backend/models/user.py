@@ -5,7 +5,7 @@ Define a User class.
 import models
 import bcrypt
 from models.base_model import BaseModel, Base
-from sqlalchemy import Column, String, Text, Float
+from sqlalchemy import Column, String, Text, Float, Integer
 from sqlalchemy.orm import relationship
 
 
@@ -26,6 +26,7 @@ class User(BaseModel, Base):
     profile_image = Column(String(100), nullable=True)
     work_images = Column(String(100), nullable=True)
     rating = Column(Float, nullable=False, default=0.0)
+    #rating_count = Column(Integer)
     post = relationship("Post", backref="user")
     # social_media = Column(String(60), nullable=True)
 
