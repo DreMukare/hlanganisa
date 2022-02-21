@@ -5,7 +5,7 @@ Define a User class.
 import datetime
 
 import jwt
-from api.v1 import app  
+from api.v1 import app
 import models
 import bcrypt
 from models.base_model import BaseModel, Base
@@ -50,6 +50,7 @@ class User(BaseModel, Base):
             new_dict.pop('work_images', None)
 
         return new_dict
+
     def encode_auth_token(self, user_id):
         """
     Generates the Auth Token
