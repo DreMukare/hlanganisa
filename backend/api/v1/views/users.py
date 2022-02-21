@@ -32,6 +32,13 @@ def get_user(user_id):
     """
     Retrieve a specific user's data
     """
+    #if 'X-Token' not in request.headers:
+    #    abort(401, description="Missing X-Token authorization token")
+
+    #token = request.headers.get('X-Token')
+    #usr_id = redis_cache.get(token)
+    #if not usr_id:
+    #    abort(401, description="Unauthorized")  # should be updated to redirect to login
     user = storage.get(User, user_id)
     if not user:
         abort(404)
@@ -57,6 +64,13 @@ def delete_user(user_id):
     """
     Deletes a user Object
     """
+    #if 'X-Token' not in request.headers:
+    #    abort(401, description="Missing X-Token authorization token")
+
+    #token = request.headers.get('X-Token')
+    #usr_id = redis_cache.get(token)
+    #if not usr_id:
+    #    abort(401, description="Unauthorized")  # should be updated to redirect to login
     user = storage.get(User, user_id)
 
     if not user:
@@ -84,6 +98,13 @@ def post_user():
         abort(400, description="Missing email")
     if 'password' not in request.get_json():
         abort(400, description="Missing password")
+    #if 'X-Token' not in request.headers:
+    #    abort(401, description="Missing X-Token authorization token")
+
+    #token = request.headers.get('X-Token')
+    #usr_id = redis_cache.get(token)
+    #if not usr_id:
+    #    abort(401, description="Unauthorized")  # should be updated to redirect to login
 
     data = request.get_json()
     data['password'] = hash_password(data['password'])
@@ -101,6 +122,14 @@ def put_user(user_id):
     """
     Updates a user's information
     """
+    #if 'X-Token' not in request.headers:
+    #    abort(401, description="Missing X-Token authorization token")
+
+    #token = request.headers.get('X-Token')
+    #usr_id = redis_cache.get(token)
+    #if not usr_id:
+    #    abort(401, description="Unauthorized")  # should be updated to redirect to login
+
     user = storage.get(User, user_id)
 
     if not user:
