@@ -26,9 +26,7 @@ class User(BaseModel, Base):
     profile_image = Column(String(100), nullable=True)
     work_images = Column(String(100), nullable=True)
     rating = Column(Float, nullable=False, default=0.0)
-    #rating_count = Column(Integer)
-    post = relationship("Post", backref="user")
-    # social_media = Column(String(60), nullable=True)
+    rating_count = Column(Integer, nullable=False, default=0)
 
     def __repr__(self) -> str:
         """Basic representation of User"""
@@ -40,6 +38,21 @@ class User(BaseModel, Base):
         """
         new_dict = super().to_dict()
         del new_dict['password']
+        del new_dict['__class__']
+        image_path = new_dict.get('profile_image', None)
+        if image_path:
+            user_profile_image = models.image_storage.get(image_path)
+            new_dict['profile_image'] = user_profile_image
+        else:
+            new_dict['profile_image'] = 'No image'
+
+        if new_dict['type'] == 'service provider':
+            work_image_path = new_dict.get('work_images', None)
+            if work_image_path:
+                work_images = models.image_storage.get_images(work_image_path)
+                new_dict['work_images'] = work_images
+            else:
+                new_dict['work_images'] = 'No images'
         if self.type == 'client':
             new_dict.pop('rates', None)
             new_dict.pop('category', None)
