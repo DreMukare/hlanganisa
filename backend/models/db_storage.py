@@ -8,12 +8,12 @@ from datetime import timedelta
 from PIL import Image
 from models.base_model import BaseModel, Base
 from models.user import User
-from models.post import Post
+from models.post import Review, Request
 from os import getenv, path, listdir
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 
-classes = {"User": User, "Post": Post}
+classes = {"User": User, "Review": Review, "Request": Request}
 
 
 class DBStorage:
@@ -191,3 +191,21 @@ class RedisCache:
         if data is not None:
             data = json.loads(data.decode('utf-8'))
         return data
+
+    def set_add_logged_in(self, value):
+        """
+        Add token to set once a user is logged in
+        """
+        self._redis.sadd("logged_in", value)
+
+    def is_logged_in(self, value):
+        """
+        Check whether user is logged in
+        """
+        return self._redis.sismember("logged_in", value)
+
+    def remove_logged_in(self, value):
+        """
+        Remove token from list of logged_in user tokens
+        """
+        self._redis.srem("logged_in", value)

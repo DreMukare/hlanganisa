@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 """ Handle RESTFul API actions for users """
+import jwt
 import bcrypt
 from os import path, mkdir
+from datetime import datetime, timedelta
 from flask import current_app
 from models.user import User
 from models import storage, image_storage, redis_cache
@@ -32,28 +34,28 @@ def get_user(user_id):
     """
     Retrieve a specific user's data
     """
-    #if 'X-Token' not in request.headers:
+    # if 'X-Token' not in request.headers:
     #    abort(401, description="Missing X-Token authorization token")
 
-    #token = request.headers.get('X-Token')
-    #usr_id = redis_cache.get(token)
-    #if not usr_id:
+    # token = request.headers.get('X-Token')
+    # usr_id = redis_cache.get(token)
+    # if not usr_id:
     #    abort(401, description="Unauthorized")  # should be updated to redirect to login
     user = storage.get(User, user_id)
     if not user:
         abort(404)
     user_data = user.to_dict()
 
-    image_path = user_data.get('profile_image')
-    user_profile_image = image_storage.get_image(image_path)
-    del user_data['profile_image']
-    user_data['profile_image'] = user_profile_image
+    # image_path = user_data.get('profile_image')
+    # user_profile_image = image_storage.get_image(image_path)
+    # del user_data['profile_image']
+    # user_data['profile_image'] = user_profile_image
 
-    if user_data.get('type') == 'service provider':
-        work_image_path = user_data.get('work_images')
-        work_images = image_storage.get_images(work_image_path)
-        del user_data['work_images']
-        user_data['work_images'] = work_images
+    # if user_data.get('type') == 'service provider':
+    #    work_image_path = user_data.get('work_images')
+    #    work_images = image_storage.get_images(work_image_path)
+    #    del user_data['work_images']
+    #    user_data['work_images'] = work_images
 
     return jsonify(user_data)
 
@@ -64,12 +66,12 @@ def delete_user(user_id):
     """
     Deletes a user Object
     """
-    #if 'X-Token' not in request.headers:
+    # if 'X-Token' not in request.headers:
     #    abort(401, description="Missing X-Token authorization token")
 
-    #token = request.headers.get('X-Token')
-    #usr_id = redis_cache.get(token)
-    #if not usr_id:
+    # token = request.headers.get('X-Token')
+    # usr_id = redis_cache.get(token)
+    # if not usr_id:
     #    abort(401, description="Unauthorized")  # should be updated to redirect to login
     user = storage.get(User, user_id)
 
@@ -98,12 +100,12 @@ def post_user():
         abort(400, description="Missing email")
     if 'password' not in request.get_json():
         abort(400, description="Missing password")
-    #if 'X-Token' not in request.headers:
+    # if 'X-Token' not in request.headers:
     #    abort(401, description="Missing X-Token authorization token")
 
-    #token = request.headers.get('X-Token')
-    #usr_id = redis_cache.get(token)
-    #if not usr_id:
+    # token = request.headers.get('X-Token')
+    # usr_id = redis_cache.get(token)
+    # if not usr_id:
     #    abort(401, description="Unauthorized")  # should be updated to redirect to login
 
     data = request.get_json()
@@ -114,7 +116,13 @@ def post_user():
         work_images_dir = path.join(current_app.instance_path,
                                     'work_images', user.id)
         mkdir(work_images_dir)  # add error checking and logging
-    return make_response(jsonify(user.to_dict()), 201)
+    dt = datetime.utcnow() + timedelta(hours=24)
+    key = current_app.secret_key
+    token = jwt.encode({'user': user.id, 'exp': dt}, key, algorithm='HS256')
+    response_data = user.to_dict()
+    response = make_response(jsonify(response_data), 200)
+    response.headers['X-Token'] = token
+    return response
 
 
 @app_views.route('/users/<user_id>', methods=['PUT'], strict_slashes=False)
@@ -122,12 +130,12 @@ def put_user(user_id):
     """
     Updates a user's information
     """
-    #if 'X-Token' not in request.headers:
+    # if 'X-Token' not in request.headers:
     #    abort(401, description="Missing X-Token authorization token")
 
-    #token = request.headers.get('X-Token')
-    #usr_id = redis_cache.get(token)
-    #if not usr_id:
+    # token = request.headers.get('X-Token')
+    # usr_id = redis_cache.get(token)
+    # if not usr_id:
     #    abort(401, description="Unauthorized")  # should be updated to redirect to login
 
     user = storage.get(User, user_id)
