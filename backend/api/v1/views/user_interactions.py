@@ -186,7 +186,7 @@ def delete_review(review_id):
     return make_response(jsonify({"status": "Review deleted"}), 200)
 
 
-@app_views.route('/request', methods=['POST'], strict_slashes=False)
+@app_views.route('/requests', methods=['POST'], strict_slashes=False)
 def post_request():
     """
     Save requests made by a user
