@@ -4,9 +4,11 @@ import { useRouter } from 'next/router';
 import Logo from '../components/logo';
 import { useState } from 'react';
 import axios from 'axios';
+import { useCookies } from 'react-cookie';
 
 const Signup = ({ mode }) => {
 	const router = useRouter();
+	const [cookie, setCookie] = useCookies(['user']);
 	const [name, setName] = useState('');
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
@@ -26,6 +28,7 @@ const Signup = ({ mode }) => {
 			'Content-Type': 'application/json',
 			'Access-Control-Allow-Origin': '*',
 			'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+			'Access-Control-Expose-Headers': 'X-Token, Server, Vary',
 		};
 
 		console.log(JSON.stringify(userData));
@@ -38,11 +41,31 @@ const Signup = ({ mode }) => {
 				{ headers }
 			)
 			.then((res) => {
-				console.log(res);
-				console.log(res.data);
 				if (res.status === 200) {
+					console.log(res.data);
+					console.log(res.headers);
 					setLoading(false);
-					router.push('/buildprofile');
+					setCookie('name', name, {
+						sameSite: 'strict',
+						path: '/',
+						expires: new Date(new Date().getTime() + 1800 * 1000),
+					});
+					setCookie('email', email, {
+						sameSite: 'strict',
+						path: '/',
+						expires: new Date(new Date().getTime() + 1800 * 1000),
+					});
+					setCookie('id', res.data.id, {
+						sameSite: 'strict',
+						path: '/',
+						expires: new Date(new Date().getTime() + 1800 * 1000),
+					});
+					setCookie('authToken', res.headers['X-Token'], {
+						sameSite: 'strict',
+						path: '/',
+						expires: new Date(new Date().getTime() + 1800 * 1000),
+					});
+					// router.push('/buildprofile');
 				}
 			})
 			.catch((err) => {

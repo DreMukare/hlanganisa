@@ -1,6 +1,7 @@
 import '../styles/globals.css';
 import { useState } from 'react';
 import Head from 'next/head';
+import { CookiesProvider } from 'react-cookie';
 
 function MyApp({ Component, pageProps }) {
 	const [mode, setMode] = useState('client');
@@ -8,7 +9,7 @@ function MyApp({ Component, pageProps }) {
 	const setAppMode = (appMode) => setMode(appMode);
 
 	return (
-		<>
+		<CookiesProvider>
 			<Head>
 				<meta
 					name='description'
@@ -32,7 +33,7 @@ function MyApp({ Component, pageProps }) {
 				/>
 			</Head>
 			<Component mode={mode} setAppMode={setAppMode} {...pageProps} />
-		</>
+		</CookiesProvider>
 	);
 }
 
