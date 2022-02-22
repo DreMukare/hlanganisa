@@ -209,3 +209,10 @@ class RedisCache:
         Remove token from list of logged_in user tokens
         """
         self._redis.srem("logged_in", value)
+
+    def flush(self):
+        """
+        Flush the database to clear everything.
+        Used when closing the app
+        """
+        self._redis.flushdb()

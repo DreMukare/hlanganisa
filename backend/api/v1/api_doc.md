@@ -16,6 +16,10 @@
  
    None
 
+*  **Header Params**
+
+   `X-Token: jwt token generated at login`
+   
 * **Data Params**
 
   None
@@ -39,6 +43,24 @@
 
   * **Code:** 400 INVALID DATA FORMAT <br />
     **Content:** `{ error : "Not a JSON" }`
+
+  * **Code:** 404 NOT FOUND <br />
+    **Content:** `{ error : "Not found" }`
+
+  OR
+
+  * **Code:** 401 UNAUTHORIZED <br />
+    **Content:** `{ error : "Not logged in" }`
+
+  OR
+
+  * **Code:** 401 UNAUTHORIZED <br />
+    **Content:** `{ error : "Unauthorized" }`
+
+  OR
+
+  * **Code:** 401 UNAUTHORIZED <br />
+    **Content:** `{ error : "Missing X-Token authorization token" }`
 
 ------------------------------------------------------
 
@@ -60,6 +82,10 @@
  
    `user_id=[string]`
 
+*  **Header Params**
+
+   `X-Token: jwt token generated at login`
+   
 * **Data Params**
 
   None
@@ -83,6 +109,24 @@
 
   * **Code:** 400 INVALID DATA FORMAT <br />
     **Content:** `{ error : "Not a JSON" }`
+
+  * **Code:** 404 NOT FOUND <br />
+    **Content:** `{ error : "Not found" }`
+
+  OR
+
+  * **Code:** 401 UNAUTHORIZED <br />
+    **Content:** `{ error : "Not logged in" }`
+
+  OR
+
+  * **Code:** 401 UNAUTHORIZED <br />
+    **Content:** `{ error : "Unauthorized" }`
+
+  OR
+
+  * **Code:** 401 UNAUTHORIZED <br />
+    **Content:** `{ error : "Missing X-Token authorization token" }`
 
 -----------------------------------------------------
 
@@ -151,6 +195,10 @@
  
    `user_id=[string]`
 
+*  **Header Params**
+
+   `X-Token: jwt token generated at login`
+   
 * **Data Params**
 
   `location=user location, optional for clients` <br />
@@ -182,6 +230,24 @@
   * **Code:** 400 INVALID DATA FORMAT <br />
     **Content:** `{ error : "Not a JSON" }`
 
+  * **Code:** 404 NOT FOUND <br />
+    **Content:** `{ error : "Not found" }`
+
+  OR
+
+  * **Code:** 401 UNAUTHORIZED <br />
+    **Content:** `{ error : "Not logged in" }`
+
+  OR
+
+  * **Code:** 401 UNAUTHORIZED <br />
+    **Content:** `{ error : "Unauthorized" }`
+
+  OR
+
+  * **Code:** 401 UNAUTHORIZED <br />
+    **Content:** `{ error : "Missing X-Token authorization token" }`
+
 ---------------------------------------------------
 
 **Delete User**
@@ -202,6 +268,10 @@
  
    `user_id=[string]`
 
+*  **Header Params**
+
+   `X-Token: jwt token generated at login`
+   
 * **Data Params**
 
   None
@@ -220,6 +290,24 @@
 
   * **Code:** 401 UNAUTHORIZED <br />
     **Content:** `{ error : "You are unauthorized to make this request." }`
+
+  * **Code:** 404 NOT FOUND <br />
+    **Content:** `{ error : "Not found" }`
+
+  OR
+
+  * **Code:** 401 UNAUTHORIZED <br />
+    **Content:** `{ error : "Not logged in" }`
+
+  OR
+
+  * **Code:** 401 UNAUTHORIZED <br />
+    **Content:** `{ error : "Unauthorized" }`
+
+  OR
+
+  * **Code:** 401 UNAUTHORIZED <br />
+    **Content:** `{ error : "Missing X-Token authorization token" }`
 
 ------------------------------------------------------
 
@@ -269,7 +357,7 @@
 
 * **Notes**
 
-  * Header `X-Token: jwt token` is added to response headers for authentication
+  * Header `X-Token: jwt token` is added to response headers for authentication and should be included in the headers for all requests
 
 --------------------------------------------------------------------------------------------
 
@@ -432,7 +520,7 @@
 
 * **URL**
 
-  /reviews/review_id
+  /reviews/:review_id
 
 * **Method:**
 
