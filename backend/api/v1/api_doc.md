@@ -432,7 +432,7 @@
 
 * **URL**
 
-  /reviews/review_id
+  /reviews/:review_id
 
 * **Method:**
 
