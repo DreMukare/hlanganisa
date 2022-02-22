@@ -2,14 +2,25 @@
 """
 Flask Application
 """
+import logging
 from api.v1.views import app_views
 from os import environ, makedirs, path
 from flask import Flask, jsonify, make_response
 from flask_cors import CORS
-from models import storage
+from models import storage, redis_cache
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+
+formatter = logging.Formatter()
+
+file_handler = logging.FileHandler('api.log')
+file_handler.setFormatter(formatter)
+
+logger.addHandler(file_handler)
 
 app = Flask(__name__)
-CORS(app)
+cors = CORS(app)
 app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
 app.config['SECRET_KEY'] = '1234'
 
@@ -24,22 +35,23 @@ def create_folders():
     root_path = app.instance_path
     profile_images_path = path.join(root_path, 'profile_pics')
     try:
-        makedirs(profile_images_path)
+        if not path.exists(profile_images_path):
+            makedirs(profile_images_path)
     except OSError as error:
-        print(error)
-        pass  # add logger error message
+        logger.error(error)
 
     work_images_path = path.join(root_path, 'work_images')
     try:
-        makedirs(work_images_path)
+        if not path.exists(work_images_path):
+            makedirs(work_images_path)
     except OSError as error:
-        print(error)
-        pass  # add logger error message
+        logger.error(error)
 
 
 @app.teardown_appcontext
 def close_db(error):
     """ Close storage """
+    redis_cache.flush()
     storage.close()
 
 
@@ -54,3 +66,4 @@ if __name__ == '__main__':
     port = environ.get('PORT') or '5000'
     create_folders()
     app.run(host=host, port=port, threaded=True)
+    logger.info("App is running")
