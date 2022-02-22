@@ -11,8 +11,8 @@ from models import storage, redis_cache
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
-
-formatter = logging.Formatter()
+format = '%(asctime)s:%(levelname)s:%(filename)s:%(funcName)s:%(message)s'
+formatter = logging.Formatter(format)
 
 file_handler = logging.FileHandler('api.log')
 file_handler.setFormatter(formatter)

@@ -2,11 +2,22 @@
 """ Handle endpoints for user interactions """
 import jwt
 import bcrypt
+import logging
 from models.user import User
 from models.post import Request, Review
 from models import storage, redis_cache
 from api.v1.views import app_views
 from flask import abort, jsonify, make_response, request, current_app
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+format = '%(asctime)s:%(levelname)s:%(filename)s:%(funcName)s:%(message)s'
+formatter = logging.Formatter(format)
+
+file_handler = logging.FileHandler('api_interactions.log')
+file_handler.setFormatter(formatter)
+
+logger.addHandler(file_handler)
 
 
 @app_views.route('/reviews', methods=['POST'], strict_slashes=False)
