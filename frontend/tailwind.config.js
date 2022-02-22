@@ -10,5 +10,5 @@ module.exports = {
 			secondary: ['Lato', 'sans-serif'],
 		},
 	},
-	plugins: [],
+	plugins: [require('@tailwindcss/forms')],
 };
