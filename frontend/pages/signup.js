@@ -1,13 +1,16 @@
 import Head from 'next/head';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import Logo from '../components/logo';
 import { useState } from 'react';
 import axios from 'axios';
 
 const Signup = ({ mode }) => {
+	const router = useRouter();
 	const [name, setName] = useState('');
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
+	const [loading, setLoading] = useState(false);
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
@@ -26,6 +29,7 @@ const Signup = ({ mode }) => {
 		};
 
 		console.log(JSON.stringify(userData));
+		setLoading(true);
 
 		axios
 			.post(
@@ -36,8 +40,15 @@ const Signup = ({ mode }) => {
 			.then((res) => {
 				console.log(res);
 				console.log(res.data);
+				if (res.status === 200) {
+					setLoading(false);
+					router.push('/buildprofile');
+				}
 			})
-			.catch((err) => console.log(err));
+			.catch((err) => {
+				console.log(err);
+				alert('Something went wrong. Please try again');
+			});
 	};
 
 	return (
@@ -132,6 +143,7 @@ const Signup = ({ mode }) => {
 					<button
 						type='submit'
 						className='w-4/6 bg-black text-white rounded-lg h-12 hover:w-5/6 hover:h-14 transform-all ease-in-out duration-700 object-center hover:text-xl'
+						disabled={loading}
 					>
 						Register
 					</button>
