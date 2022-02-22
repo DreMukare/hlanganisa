@@ -115,18 +115,26 @@ def post_user():
         abort(400, description="Missing password")
 
     data = request.get_json()
+    users = storage.all(User).values()
+    for u in users:
+        if u.email == data['email']:
+            abort(400, description="Email already exists")
     data['password'] = hash_password(data['password'])
     user = User(**data)
     user.save()
     if data.get('type') == 'service provider':
         work_images_dir = path.join(current_app.instance_path,
                                     'work_images', user.id)
-        mkdir(work_images_dir)  # add error checking and logging
+        if not path.exists(work_images_dir):
+            try:
+                mkdir(work_images_dir)
+            except OSError as error:
+                pass  # add error checking and logging
     dt = datetime.utcnow() + timedelta(hours=24)
     key = current_app.secret_key
     token = jwt.encode({'user': user.id, 'exp': dt}, key, algorithm='HS256')
     response_data = user.to_dict()
-    response_data['token'] = token
+     response_data['token'] = token
     response = make_response(jsonify(response_data), 200)
     response.headers['X-Token'] = token
     return response
