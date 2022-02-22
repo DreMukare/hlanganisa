@@ -20,7 +20,9 @@ const Signup = ({ mode }) => {
 		};
 
 		const headers = {
-			'Content-Type': 'application/JSON',
+			'Content-Type': 'application/json',
+			'Access-Control-Allow-Origin': '*',
+			'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
 		};
 
 		console.log(JSON.stringify(userData));

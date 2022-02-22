@@ -6,8 +6,10 @@ from api.v1.views import app_views
 from os import environ, makedirs, path
 from flask import Flask, jsonify, make_response
 from models import storage
+from flask_cors import CORS
 
 app = Flask(__name__)
+cors = CORS(app)
 app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
 app.config['SECRET_KEY'] = '1234'
 
