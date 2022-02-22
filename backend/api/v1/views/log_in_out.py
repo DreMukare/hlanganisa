@@ -4,11 +4,22 @@ Handle user login and logout (temp)
 """
 import jwt
 import bcrypt
+import logging
 from datetime import datetime, timedelta
 from models.user import User
 from models import storage, redis_cache
 from api.v1.views import app_views
 from flask import abort, jsonify, make_response, request, current_app
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+format = '%(asctime)s:%(levelname)s:%(filename)s:%(funcName)s:%(message)s'
+formatter = logging.Formatter(format)
+
+file_handler = logging.FileHandler('api_login.log')
+file_handler.setFormatter(formatter)
+
+logger.addHandler(file_handler)
 
 
 @app_views.route('/login', methods=['POST'], strict_slashes=False)

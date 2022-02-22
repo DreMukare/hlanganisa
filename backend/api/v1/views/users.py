@@ -2,6 +2,7 @@
 """ Handle RESTFul API actions for users """
 import jwt
 import bcrypt
+import logging
 from os import path, mkdir
 from datetime import datetime, timedelta
 from flask import current_app
@@ -10,6 +11,16 @@ from models import storage, image_storage, redis_cache
 from models.db_storage import ImageStorage, RedisCache
 from api.v1.views import app_views
 from flask import abort, jsonify, make_response, request
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+format = '%(asctime)s:%(levelname)s:%(filename)s:%(funcName)s:%(message)s'
+formatter = logging.Formatter(format)
+
+file_handler = logging.FileHandler('api_users.log')
+file_handler.setFormatter(formatter)
+
+logger.addHandler(file_handler)
 
 
 def hash_password(password):
@@ -135,7 +146,7 @@ def post_user():
     token = jwt.encode({'user': user.id, 'exp': dt}, key, algorithm='HS256')
     response_data = user.to_dict()
     response_data['token'] = token
-    response = make_response(jsonify(response_data), 200)
+    response = make_response(jsonify(response_data), 201)
     response.headers['X-Token'] = token
     return response
 
