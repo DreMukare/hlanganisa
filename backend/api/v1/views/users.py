@@ -126,6 +126,7 @@ def post_user():
     key = current_app.secret_key
     token = jwt.encode({'user': user.id, 'exp': dt}, key, algorithm='HS256')
     response_data = user.to_dict()
+    response_data['token'] = token
     response = make_response(jsonify(response_data), 200)
     response.headers['X-Token'] = token
     return response
