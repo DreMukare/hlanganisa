@@ -20,7 +20,7 @@ def post_user(user_id):
 
     if 'email' not in request.get_json():
         abort(400, description="Missing email")
-   if 'name' not in request.get_json():
+    if 'name' not in request.get_json():
         abort(400, description="Missing name")
     if 'password' not in request.get_json():
         abort(400, description="Missing password")
