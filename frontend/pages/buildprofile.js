@@ -55,7 +55,7 @@ const BuildProfile = ({ mode }) => {
 		}
 
 		const dataToSend =
-			mode === 'service person'
+			mode === 'service provider'
 				? {
 						phone_no: phone,
 						location,
@@ -130,7 +130,10 @@ const BuildProfile = ({ mode }) => {
 					One more step to go {name}
 				</h1>
 				<section>
-					<form onSubmit={handleSubmit} className='w-4/6 md:w-1/6 mx-auto my-9'>
+					<form
+						onSubmit={handleSubmit}
+						className='w-4/6 md:w-3/12 mx-auto my-9'
+					>
 						<div className='mb-7'>
 							<label htmlFor='phone'>Enter your phone number</label>
 							<PhoneInput
@@ -209,7 +212,7 @@ const BuildProfile = ({ mode }) => {
 								<div className='mb-7'>
 									<label htmlFor='bio'>Tell clients more about you</label>
 									<textarea
-										class='
+										className='
                     w-full
                     rounded-md
                     border-gray-300

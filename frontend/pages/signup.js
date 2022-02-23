@@ -43,7 +43,7 @@ const Signup = ({ mode }) => {
 			)
 			.then((res) => {
 				if (res.status === 201) {
-					console.log(res);
+					console.log(res.data);
 					console.log(res.headers);
 					setLoading(false);
 					setCookie('name', name, {

@@ -161,7 +161,8 @@ def put_user(user_id):
 
     token = request.headers.get('X-Token')
     if not token:
-        abort(401, description="Unauthorized")
+        print('Token not valid')
+        abort(401, description="Unauthorized: Token not valid")
     if not redis_cache.is_logged_in(token):
         abort(401, description="Not logged in")
     try:
