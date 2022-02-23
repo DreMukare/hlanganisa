@@ -6,7 +6,7 @@ import { useState } from 'react';
 import axios from 'axios';
 import { useCookies } from 'react-cookie';
 
-const Signup = ({ mode }) => {
+const Signup = ({ mode, setWorkAround }) => {
 	const router = useRouter();
 	const [cookie, setCookie] = useCookies(['user']);
 	const [name, setName] = useState('');
@@ -46,25 +46,26 @@ const Signup = ({ mode }) => {
 					console.log(res.data);
 					console.log(res.headers);
 					setLoading(false);
+					setWorkAround(password);
 					setCookie('name', name, {
 						sameSite: 'strict',
 						path: '/',
-						expires: new Date(new Date().getTime() + 1800 * 1000),
+						expires: new Date(new Date().getTime() + 86400 * 1000),
 					});
 					setCookie('email', email, {
 						sameSite: 'strict',
 						path: '/',
-						expires: new Date(new Date().getTime() + 1800 * 1000),
+						expires: new Date(new Date().getTime() + 86400 * 1000),
 					});
 					setCookie('id', res.data.id, {
 						sameSite: 'strict',
 						path: '/',
-						expires: new Date(new Date().getTime() + 1800 * 1000),
+						expires: new Date(new Date().getTime() + 86400 * 1000),
 					});
 					setCookie('authToken', res.data.token, {
 						sameSite: 'strict',
 						path: '/',
-						expires: new Date(new Date().getTime() + 1800 * 1000),
+						expires: new Date(new Date().getTime() + 86400 * 1000),
 					});
 					router.push('/buildprofile');
 				}

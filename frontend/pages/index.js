@@ -16,7 +16,7 @@ export default function Home({ setAppMode, mode }) {
 
 	const handleClickClient = (e) => {
 		e.preventDefault();
-		setAppMode('client', () => {});
+		setAppMode('client');
 		router.push('/signup');
 	};
 

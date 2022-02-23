@@ -11,7 +11,7 @@ const Login = () => {
 	const [password, setPassword] = useState('');
 	const [loading, setLoading] = useState('');
 	const router = useRouter();
-	const [cookie, useCookie] = useCookies(['user']);
+	const [cookie, setCookie] = useCookies(['user']);
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
@@ -29,37 +29,40 @@ const Login = () => {
 			'Content-Type': 'application/json',
 			'Access-Control-Allow-Origin': '*',
 			'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
-			'Access-Control-Expose-Headers': 'X-Token, Server, Vary',
 		};
 
 		axios
-			.post('http://192.168.100.109:5000/login', JSON.stringify(dataToPush), {
-				headers,
-			})
+			.post(
+				'http://192.168.100.109:5000/api/v1/login',
+				JSON.stringify(dataToPush),
+				{
+					headers,
+				}
+			)
 			.then((res) => {
 				if (res.status === 200) {
 					console.log(res.data);
 					console.log(res.headers);
 					setLoading(false);
-					setCookie('name', name, {
+					setCookie('name', res.data.name, {
 						sameSite: 'strict',
 						path: '/',
-						expires: new Date(new Date().getTime() + 1800 * 1000),
+						expires: new Date(new Date().getTime() + 86400 * 1000),
 					});
-					setCookie('email', email, {
+					setCookie('email', res.data.email, {
 						sameSite: 'strict',
 						path: '/',
-						expires: new Date(new Date().getTime() + 1800 * 1000),
+						expires: new Date(new Date().getTime() + 86400 * 1000),
 					});
 					setCookie('id', res.data.id, {
 						sameSite: 'strict',
 						path: '/',
-						expires: new Date(new Date().getTime() + 1800 * 1000),
+						expires: new Date(new Date().getTime() + 86400 * 1000),
 					});
 					setCookie('authToken', res.data.token, {
 						sameSite: 'strict',
 						path: '/',
-						expires: new Date(new Date().getTime() + 1800 * 1000),
+						expires: new Date(new Date().getTime() + 86400 * 1000),
 					});
 					router.push('/dashboard');
 				}

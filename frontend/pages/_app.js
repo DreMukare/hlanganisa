@@ -5,6 +5,7 @@ import { CookiesProvider } from 'react-cookie';
 
 function MyApp({ Component, pageProps }) {
 	const [mode, setMode] = useState('client');
+	const [workAround, setWorkAround] = useState('');
 
 	const setAppMode = (appMode) => setMode(appMode);
 
@@ -32,7 +33,13 @@ function MyApp({ Component, pageProps }) {
 					rel='stylesheet'
 				/>
 			</Head>
-			<Component mode={mode} setAppMode={setAppMode} {...pageProps} />
+			<Component
+				mode={mode}
+				workAround={workAround}
+				setWorkAround={setWorkAround}
+				setAppMode={setAppMode}
+				{...pageProps}
+			/>
 		</CookiesProvider>
 	);
 }

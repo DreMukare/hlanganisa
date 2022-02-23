@@ -8,7 +8,7 @@ import axios from 'axios';
 import 'react-phone-number-input/style.css';
 import PhoneInput from 'react-phone-number-input';
 
-const BuildProfile = ({ mode }) => {
+const BuildProfile = ({ mode, workAround }) => {
 	const [cookies, setCookies] = useCookies(['user']);
 	const router = useRouter();
 	const { name, email, authToken, id } = cookies;
@@ -69,6 +69,32 @@ const BuildProfile = ({ mode }) => {
 
 		const dataToSendJSON = JSON.stringify(dataToSend);
 		console.log(dataToSend);
+		console.log(typeof authToken);
+
+		// const postHeaders = {
+		// 	'Content-Type': 'application/json',
+		// 	'Access-Control-Allow-Origin': '*',
+		// 	'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+		// };
+
+		// const dataToPush = {
+		// 	email,
+		// 	password: workAround,
+		// };
+		// console.log(JSON.stringify(dataToPush));
+
+		// let workAroundToken;
+
+		// axios
+		// 	.post(
+		// 		'http://192.168.100.109:5000/api/v1/login',
+		// 		JSON.stringify(dataToPush),
+		// 		{ postHeaders }
+		// 	)
+		// 	.then((res) => {
+		// 		workAroundToken = res.data.token;
+		// 	})
+		// 	.catch((err) => console.log(err));
 
 		const headers = {
 			'Content-Type': 'application/json',
@@ -98,10 +124,8 @@ const BuildProfile = ({ mode }) => {
 
 	const onImageChange = (e) => {
 		if (e.target.files && e.target.files[0]) {
-			// setImage(URL.createObjectURL(e.target.files[0]));
 			setImage(e.target.files[0]);
 		}
-		console.log(image);
 	};
 
 	const storeWorkImagesInState = (e) => {

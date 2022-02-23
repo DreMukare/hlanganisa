@@ -144,6 +144,7 @@ def post_user():
     dt = datetime.utcnow() + timedelta(hours=24)
     key = current_app.secret_key
     token = jwt.encode({'user': user.id, 'exp': dt}, key, algorithm='HS256')
+    redis_cache.set_add_logged_in(token)
     response_data = user.to_dict()
     response_data['token'] = token
     response = make_response(jsonify(response_data), 201)
