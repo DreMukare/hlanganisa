@@ -167,12 +167,14 @@ class RedisCache:
     """
     Create a redis cache system
     """
-    def __init__(self):
+    def __init__(self, host='localhost', port=6379, db=5):
         """
         Create an instance of a Redis Client and flush it using flushdb
         """
-        self._redis = redis.Redis()
-        self._redis.flushdb()
+        self.pool = redis.ConnectionPool(host=host, port=port, db=db)
+        self._redis = redis.StrictRedis(connection_pool=self.pool)
+        self.redis_set = 'Login'
+        #self._redis.flushdb()
 
     def store(self, data, expire=timedelta(hours=24)) -> str:
         """
@@ -196,19 +198,27 @@ class RedisCache:
         """
         Add token to set once a user is logged in
         """
-        self._redis.sadd("logged_in", value)
+        return self._redis.sadd(self.redis_set, value)
 
     def is_logged_in(self, value):
         """
         Check whether user is logged in
         """
-        return self._redis.sismember("logged_in", value)
+        return self._redis.sismember(self.redis_set, value)
 
     def remove_logged_in(self, value):
         """
         Remove token from list of logged_in user tokens
         """
         self._redis.srem("logged_in", value)
+
+    def set_show_members(self):
+        """
+        Show all members of Login set
+        """
+        members = self._redis.smembers(self.redis_set)
+        l = self._redis.scard(self.redis_set)
+        return (l, members)
 
     def flush(self):
         """

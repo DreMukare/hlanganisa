@@ -51,7 +51,7 @@ def create_folders():
 @app.teardown_appcontext
 def close_db(error):
     """ Close storage """
-    redis_cache.flush()
+    #redis_cache.flush()
     storage.close()
 
 
