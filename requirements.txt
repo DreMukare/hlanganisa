@@ -10,6 +10,7 @@ Flask-Login==0.5.0
 Flask-Mail==0.9.1
 Flask-SQLAlchemy==2.5.1
 Flask-WTF==1.0.0
+flask-cors
 greenlet==1.1.2
 idna==3.3
 itsdangerous==2.0.1
@@ -22,3 +23,4 @@ SQLAlchemy==1.4.31
 Werkzeug==2.0.3
 WTForms==3.0.1
 mysqlclient
+jwt
