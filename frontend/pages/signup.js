@@ -41,8 +41,8 @@ const Signup = ({ mode }) => {
 				{ headers }
 			)
 			.then((res) => {
-				if (res.status === 200) {
-					console.log(res.data);
+				if (res.status === 201) {
+					console.log(res);
 					console.log(res.headers);
 					setLoading(false);
 					setCookie('name', name, {
@@ -60,17 +60,19 @@ const Signup = ({ mode }) => {
 						path: '/',
 						expires: new Date(new Date().getTime() + 1800 * 1000),
 					});
-					setCookie('authToken', res.headers['X-Token'], {
+					setCookie('authToken', res.data.token, {
 						sameSite: 'strict',
 						path: '/',
 						expires: new Date(new Date().getTime() + 1800 * 1000),
 					});
-					// router.push('/buildprofile');
+					window.sessionStorage.setItem('cookie', cookie);
+					router.push('/buildprofile');
 				}
 			})
 			.catch((err) => {
 				console.log(err);
 				alert('Something went wrong. Please try again');
+				setLoading(false);
 			});
 	};
 
@@ -117,7 +119,7 @@ const Signup = ({ mode }) => {
 						<label htmlFor='name'>Full Name</label>
 						<input
 							onChange={(e) => setName(e.target.value)}
-							className='mt-2
+							className='
               w-full
               px-4
               border-0 border-b-2 border-gray-400
