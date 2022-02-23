@@ -38,6 +38,8 @@ const BuildProfile = ({ mode }) => {
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 
+		setLoading(true);
+
 		let encodedImage;
 		const encodedImages = [];
 
@@ -75,8 +77,6 @@ const BuildProfile = ({ mode }) => {
 			'Access-Control-Expose-Headers': 'X-Token, Server, Vary',
 			'X-Token': authToken,
 		};
-
-		setLoading(true);
 
 		axios
 			.put(`http://192.168.100.109:5000/api/v1/users/${id}`, dataToSendJSON, {

@@ -6,25 +6,24 @@ import { useState } from 'react';
 import axios from 'axios';
 import { useCookies } from 'react-cookie';
 
-const Signup = ({ mode }) => {
-	const router = useRouter();
-	const [cookie, setCookie] = useCookies(['user']);
-	const [name, setName] = useState('');
+const Login = () => {
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
-	const [loading, setLoading] = useState(false);
+	const [loading, setLoading] = useState('');
+	const router = useRouter();
+	const [cookie, useCookie] = useCookies(['user']);
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
 
 		setLoading(true);
 
-		const userData = {
-			name,
+		const dataToPush = {
 			email,
-			type: mode,
 			password,
 		};
+
+		console.log(JSON.stringify(dataToPush));
 
 		const headers = {
 			'Content-Type': 'application/json',
@@ -33,17 +32,13 @@ const Signup = ({ mode }) => {
 			'Access-Control-Expose-Headers': 'X-Token, Server, Vary',
 		};
 
-		console.log(JSON.stringify(userData));
-
 		axios
-			.post(
-				'http://192.168.100.109:5000/api/v1/users',
-				JSON.stringify(userData),
-				{ headers }
-			)
+			.post('http://192.168.100.109:5000/login', JSON.stringify(dataToPush), {
+				headers,
+			})
 			.then((res) => {
-				if (res.status === 201) {
-					console.log(res);
+				if (res.status === 200) {
+					console.log(res.data);
 					console.log(res.headers);
 					setLoading(false);
 					setCookie('name', name, {
@@ -66,12 +61,12 @@ const Signup = ({ mode }) => {
 						path: '/',
 						expires: new Date(new Date().getTime() + 1800 * 1000),
 					});
-					router.push('/buildprofile');
+					router.push('/dashboard');
 				}
 			})
 			.catch((err) => {
 				console.log(err);
-				alert('Something went wrong. Please try again');
+				alert('Something went wrong, please try again');
 				setLoading(false);
 			});
 	};
@@ -79,28 +74,15 @@ const Signup = ({ mode }) => {
 	return (
 		<>
 			<Head>
-				<title>Sign up as a {mode}</title>
+				<title>Welcome back</title>
 			</Head>
 
 			<nav className='flex justify-between py-5 px-8'>
 				<Logo />
 				<div>
 					<Link href='/'>
-						<a>
-							<svg
-								className='w-6 h-6 hover:w-9 hover:h-9 transform-all ease-in-out duration-700'
-								fill='none'
-								stroke='currentColor'
-								viewBox='0 0 24 24'
-								xmlns='http://www.w3.org/2000/svg'
-							>
-								<path
-									strokeLinecap='round'
-									strokeLinejoin='round'
-									strokeWidth={2}
-									d='M15 19l-7-7 7-7'
-								/>
-							</svg>
+						<a className='hover:text-2xl transform-all ease-in-out duration-700'>
+							Sign Up
 						</a>
 					</Link>
 				</div>
@@ -108,30 +90,10 @@ const Signup = ({ mode }) => {
 
 			<main className='px-8 mx-auto scroll-smooth'>
 				<h1 className='text-center font-secondary font-bold text-3xl'>
-					Sign up as a{' '}
-					<span className='hover:overline hover:tracking-wider transform-all ease-in-out duration-700'>
-						{mode}
-					</span>
+					Welcome back
 				</h1>
 
-				<form onSubmit={handleSubmit} className='w-4/6 md:w-2/6 mx-auto my-56'>
-					<div className='mb-8'>
-						<label htmlFor='name'>Full Name</label>
-						<input
-							onChange={(e) => setName(e.target.value)}
-							className='
-              w-full
-              px-4
-              border-0 border-b-2 border-gray-400
-              focus:ring-0 focus:border-black'
-							type='text'
-							name='name'
-							id='name'
-							placeholder='Enter your name'
-							autoComplete='on'
-							required
-						/>
-					</div>
+				<form onSubmit={handleSubmit} className='w-4/6 md:w-1/6 mx-auto my-56'>
 					<div className='mb-8'>
 						<label htmlFor='email'>Email</label>
 						<input
@@ -170,7 +132,7 @@ const Signup = ({ mode }) => {
 						className='w-4/6 bg-black text-white rounded-lg h-12 hover:w-5/6 hover:h-14 transform-all ease-in-out duration-700 object-center hover:text-xl'
 						disabled={loading}
 					>
-						Register
+						Login
 					</button>
 				</form>
 			</main>
@@ -178,4 +140,4 @@ const Signup = ({ mode }) => {
 	);
 };
 
-export default Signup;
+export default Login;
