@@ -1097,7 +1097,7 @@
 
   OR
 
-  * **Code:** 400 INVALID DATA FORMAT
+  * **Code:** 400 INVALID DATA FORMAT <br />
     **Content:** `{ error: "Missing type" }`
 
 * **Notes**
