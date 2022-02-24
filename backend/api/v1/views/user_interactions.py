@@ -51,7 +51,6 @@ def post_review():
     data = request.get_json()
     review = Review(**data)
     review.save()
-    # work out how to update user's rating
     try:
         key = current_app.secret_key
         decoded = jwt.decode(token, key, algorithms="HS256")
@@ -61,6 +60,7 @@ def post_review():
     user = storage.get(User, user_id)
     if not user:
         abort(404)
+    # update user's rating
     user = storage.get(User, data["reviewee_id"])
     user.rating_count += 1
     curr_rating = user.rating
@@ -130,7 +130,7 @@ def put_review(review_id):
     if 'X-Token' not in request.headers:
         abort(401, description="Missing X-Token authorization token")
     if not request.get_json():
-        abort(401, description="Not a JSON")
+        abort(400, description="Not a JSON")
 
     token = request.headers.get('X-Token')
     if not token:
@@ -141,7 +141,7 @@ def put_review(review_id):
         key = current_app.secret_key
         decoded = jwt.decode(token, key, algorithms="HS256")
     except Exception:
-        abort(401, "Not logged in")
+        abort(403, "Not logged in")
     user_id = decoded['user']
     user = storage.get(User, user_id)
     if not user:
@@ -156,12 +156,13 @@ def put_review(review_id):
         if key not in ignore:
             setattr(review, key, value)
     review.save()
-    user = storage.get(User, data["reviewee_id"])
-    user.rating_count += 1
-    curr_rating = user.rating
-    new_rating = (curr_rating + float(data['rating'])) // user.rating_count
-    user.rating = new_rating
-    user.save()
+    if "rating" in data:
+        user = storage.get(User, data["reviewee_id"])
+        user.rating_count += 1
+        curr_rating = user.rating
+        new_rating = (curr_rating + float(data['rating'])) // user.rating_count
+        user.rating = new_rating
+        user.save()
     return jsonify(review.to_dict())
 
 
@@ -181,7 +182,7 @@ def delete_review(review_id):
         key = current_app.secret_key
         decoded = jwt.decode(token, key, algorithms="HS256")
     except Exception:
-        abort(401, "Not logged in")
+        abort(403, "Not logged in")
     user_id = decoded['user']
     user = storage.get(User, user_id)
     if not user:
@@ -268,7 +269,8 @@ def get_requests():
     if not user_id:
         abort(404)
 
-    requests = get_active_requests()
+    # requests = get_active_requests()
+    requests = storage.get_active_requests()
     return jsonify(requests)
 
 
@@ -367,3 +369,56 @@ def delete_request(request_id):
     storage.save()
 
     return make_response(jsonify({"status": "Request deleted"}), 200)
+
+
+@app_views.route('/reviews/users/<user_id>',
+                 methods=['GET'], strict_slashes=False)
+def get_requests_associated_with_user(user_id):
+    """
+    Retrieve reviews associated withthe given user_id, either
+    - reviews made by a user
+    - reviews a user has received
+    - or both
+    """
+    if not request.get_json():
+        abort(400, description="Not a JSON")
+
+    if "type" not in request.get_json():
+        abort(400, description="Missing type")
+    if 'X-Token' not in request.headers:
+        abort(401, description="Missing X-Token authorization token")
+
+    token = request.headers.get('X-Token')
+    if not token:
+        abort(401, description="Unauthorized")
+    if not redis_cache.is_logged_in(token):
+        abort(401, description="Not logged in")
+    try:
+        key = current_app.secret_key
+        decoded = jwt.decode(token, key, algorithms="HS256")
+    except Exception as e:
+        abort(401, "Not logged in")
+
+    type = request.get_json()['type']
+    if type == 'made for':
+        reviews = storage.get_reviews_for_user(user_id)
+        reviews_data = [review.to_dict() for review in reviews]
+        return jsonify(reviews_data)
+    elif type == 'made by':
+        reviews = storage.get_reviews_by_user(user_id)
+        reviews_data = [review.to_dict() for review in reviews]
+        return jsonify(reviews_data)
+    elif type == 'both':
+        reviews_for = storage.get_reviews_for_user(user_id)
+        reviews_for_data = [review.to_dict() for review in reviews_for]
+
+        reviews_by = storage.get_reviews_by_user(user_id)
+        reviews_by_data = [review.to_dict() for review in reviews_by]
+
+        reviews_data = {
+            "reviews_by": reviews_by_data,
+            "reviews_for": reviews_for_data
+        }
+        return jsonify(reviews_data)
+
+    abort(400, description="type not recognized")

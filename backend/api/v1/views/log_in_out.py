@@ -36,11 +36,7 @@ def login():
 
     data = request.get_json()
     try:
-        users = storage.all(User).values()
-        user = None
-        for u in users:
-            if u.email == data['email']:
-                user = u
+        user = storage.get_user_by_email(data['email'])
     except Exception:
         abort(404)
 

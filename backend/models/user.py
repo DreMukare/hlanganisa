@@ -41,7 +41,7 @@ class User(BaseModel, Base):
         del new_dict['__class__']
         image_path = new_dict.get('profile_image', None)
         if image_path:
-            user_profile_image = models.image_storage.get(image_path)
+            user_profile_image = models.image_storage.get_image(image_path)
             new_dict['profile_image'] = user_profile_image
         else:
             new_dict['profile_image'] = 'No image'

@@ -101,6 +101,43 @@ class DBStorage:
 
         return count
 
+    def get_user_by_email(self, email):
+        """
+        Retrieve user who has the specified email
+        """
+        user = self.__session.query(User).filter_by(email=email).first()
+        return user
+
+    def get_users_by_category(self, category):
+        """
+        Retrieve service providers who offer services in the specified category
+        """
+        users = self.__session.query(User).filter_by(category=category).all()
+        return users
+
+    def get_reviews_for_user(self, reviewee_id):
+        """
+        Retrieve all reviews that a user has received
+        """
+        id = user_id
+        reviews = self.__session.query(Review).filter_by(reviewee_id=id).all()
+        return reviews
+
+    def get_reviews_by_user(self, user_id):
+        """
+        Retrieve all reviews that a user has made
+        """
+        id = user_id
+        reviews = self.__session.query(Review).filter_by(user_id=id).all()
+        return reviews
+
+    def get_active_requests(self):
+        """
+        Retrieve all active requests
+        """
+        reqs = self.__session.query(Request).filter_by(status='active').all()
+        return reqs
+
 
 class ImageStorage:
     """Handles storing and retrieving images"""

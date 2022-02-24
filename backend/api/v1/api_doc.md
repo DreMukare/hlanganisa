@@ -130,13 +130,86 @@
 
 -----------------------------------------------------
 
+**Show Users/Service providers by category**
+----
+  Returns info on all service providers providing services in a certain category as json data.
+
+* **URL**
+
+  /users/category
+
+* **Method:**
+
+  `GET`
+  
+*  **URL Params**
+
+   **Required:**
+ 
+   None
+
+*  **Header Params**
+
+   `X-Token: jwt token generated at login`
+   
+* **Data Params**
+
+  `category=category of service needed` <br />
+
+* **Success Response:**
+
+  * **Code:** 200 <br />
+    **Content:** `[{ id : b3ert72c-a974-412c-8e4p-240uy973fchj, name : "Michael Bloom", location: "Juja", phone_no: 0727654188, profile_image: b64 encoded data of the image, rates: 0, rating: 0.0, work_images: List of b64 encoded data of the images, category: "Hair dresser", description: "I am a service provider", type: "client or service provider" }]`
+ 
+* **Error Response:**
+
+  * **Code:** 404 NOT FOUND <br />
+    **Content:** `{ error : "Not found" }`
+
+  OR
+
+  * **Code:** 401 UNAUTHORIZED <br />
+    **Content:** `{ error : "You are unauthorized to make this request." }`
+
+  OR
+
+  * **Code:** 400 INVALID DATA FORMAT <br />
+    **Content:** `{ error : "Not a JSON" }`
+
+  OR
+
+  * **Code:** 400 INVALID DATA FORMAT <br />
+    **Content:** `{ error : "Missing category" }`
+
+  OR
+  
+  * **Code:** 404 NOT FOUND <br />
+    **Content:** `{ error : "Not found" }`
+
+  OR
+
+  * **Code:** 401 UNAUTHORIZED <br />
+    **Content:** `{ error : "Not logged in" }`
+
+  OR
+
+  * **Code:** 401 UNAUTHORIZED <br />
+    **Content:** `{ error : "Unauthorized" }`
+
+  OR
+
+  * **Code:** 401 UNAUTHORIZED <br />
+    **Content:** `{ error : "Missing X-Token authorization token" }`
+
+-----------------------------------------------------------------------------
+
 **Create User**
 ----
   Create a user account and return their data in json format
 
 * **URL**
 
-  /users/:user_id
+  /users
 
 * **Method:**
 
@@ -957,3 +1030,77 @@
 
   * **Code:** 401 UNAUTHORIZED <br />
     **Content:** `{ error : "Missing X-Token authorization token" }`
+
+--------------------------------------------------------------------------
+
+**Retrieve reviews associated with a specific user**
+----
+  Retrieve reviews either made by a user, received by a user or both
+
+* **URL**
+
+  /reviews/users/:user_id
+
+* **Method:**
+
+  `GET`
+  
+*  **URL Params**
+
+   **Required:**
+ 
+   `user_id=[string]`
+
+*  **Header Params**
+
+   `X-Token: jwt token generated at login`
+   
+* **Data Params**
+
+   `type=made for, made by, or both` <br />
+
+   
+* **Success Response:**
+
+  * **Code:** 200 <br />
+    **Content:** `[{ id : b3ert72c-a974-412c-8e4p-240uy973fchj, user_id: b3ert72c-a974-412c-8e4p-240uy973fchj, reviewee_id: b3ert72c-a974-412c-8e4p-240uy973fchj, content: "Dysmal service etc", rating: 1.3 }]`
+
+  OR
+
+    * **Code:** 200 <br />
+    **Content:** `{reviews_by: { id : b3ert72c-a974-412c-8e4p-240uy973fchj, user_id: b3ert72c-a974-412c-8e4p-240uy973fchj, reviewee_id: b3ert72c-a974-412c-8e4p-240uy973fchj, content: "Dysmal service etc", rating: 1.3 }, reviews_for:  { id : b3ert72c-a974-412c-8e4p-240uy973fchj, user_id: b3ert72c-a974-412c-8e4p-240uy973fchj, reviewee_id: b3ert72c-a974-412c-8e4p-240uy973fchj, content: "Dysmal service etc", rating: 1.3 }}`
+    
+* **Error Response:**
+
+  * **Code:** 404 NOT FOUND <br />
+    **Content:** `{ error : "Not found" }`
+
+  OR
+
+  * **Code:** 401 UNAUTHORIZED <br />
+    **Content:** `{ error : "Not logged in" }`
+
+  OR
+
+  * **Code:** 401 UNAUTHORIZED <br />
+    **Content:** `{ error : "Unauthorized" }`
+
+  OR
+
+  * **Code:** 401 UNAUTHORIZED <br />
+    **Content:** `{ error : "Missing X-Token authorization token" }`
+
+  OR
+
+  * **Code:** 401 UNAUTHORIZED <br />
+    **Content:** `{ error : "Not a JSON" }`
+
+  OR
+
+  * **Code:** 400 INVALID DATA FORMAT
+    **Content:** `{ error: "Missing type" }`
+
+* **Notes**
+
+  * Success response differs for type == 'both' as shown in second option
+ 
