@@ -61,6 +61,18 @@ def not_found(error):
     return make_response(jsonify({'error': 'Not found'}), 404)
 
 
+@app.errorhandler(400)
+def not_found(error):
+    """ Handle 400 errors """
+    return make_response(jsonify(str(error)), 400)
+
+
+@app.errorhandler(401)
+def not_found(error):
+    """ Handle 400 errors """
+    return make_response(jsonify(str(error)), 401)
+
+
 if __name__ == '__main__':
     host = environ.get('HOST') or '0.0.0.0'
     port = environ.get('PORT') or '5000'
