@@ -209,7 +209,7 @@ def put_user(user_id):
     return make_response(jsonify(user.to_dict()), 200)
 
 
-@app_views.route('/users/category', methods=['GET'], strict_slashes=False)
+@app_views.route('/users/category', methods=['POST'], strict_slashes=False)
 def get_users_by_category():
     """
     Retrieves service providers based on the category of service they provide
