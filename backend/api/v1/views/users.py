@@ -126,10 +126,9 @@ def post_user():
         abort(400, description="Missing password")
 
     data = request.get_json()
-    users = storage.all(User).values()
-    for u in users:
-        if u.email == data['email']:
-            abort(400, description="Email already exists")
+    existing_user = storage.get_user_by_email(data['email'])
+    if existing_user:
+        abort(400, description="Email already exists")
     data['password'] = hash_password(data['password'])
     user = User(**data)
     user.save()
@@ -211,11 +210,15 @@ def put_user(user_id):
     return make_response(jsonify(user.to_dict()), 200)
 
 
-@app_views.route('/users/<category>', methods=['GET'], strict_slashes=False)
-def get_users_by_category(category):
+@app_views.route('/users/category', methods=['GET'], strict_slashes=False)
+def get_users_by_category():
     """
     Retrieves service providers based on the category of service they provide
     """
+    if not request.get_json():
+        abort(400, description="Not a JSON")
+    if 'category' not in request.get_json():
+        abort(400, description="Missing category")
     if 'X-Token' not in request.headers:
         abort(401, description="Missing X-Token authorization token")
 
@@ -229,8 +232,7 @@ def get_users_by_category(category):
         decoded = jwt.decode(token, key, algorithms="HS256")
     except Exception:
         abort(401, "Not logged in")
-    users = storage.all(User).values()
-    users_data = [user.to_dict() for user in users if
-                  user.type == "service provider" and
-                  user.category == category]
+    category = request.get_json()['category']
+    users = storage.get_users_by_category(category)
+    users_data = [user.to_dict() for user in users]
     return jsonify(users_data)
