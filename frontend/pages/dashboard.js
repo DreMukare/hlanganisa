@@ -5,17 +5,18 @@ import { useCookies } from 'react-cookie';
 import Select from 'react-select';
 import Navbar from '../components/navbar';
 import Greeting from '../components/greeting';
+import ServiceDisplay from '../components/serviceDisplay';
 
 const services = [
-	{ label: 'Plumber', value: 'Plumber' },
-	{ label: 'Cleaner', value: 'Cleaner' },
-	{ label: 'Cook', value: 'Cook' },
-	{ label: 'Electrician', value: 'Electrician' },
-	{ label: 'Dog Walker', value: 'Dog Walker' },
-	{ label: 'Dog Groomer', value: 'Dog Groomer' },
-	{ label: 'Salonist', value: 'Salonist' },
-	{ label: 'Masseuse', value: 'Masseuse' },
-	{ label: 'Music Teacher', value: 'Music Teacher' },
+	{ label: 'Plumber', value: 'plumber' },
+	{ label: 'Cleaner', value: 'cleaner' },
+	{ label: 'Cook', value: 'cook' },
+	{ label: 'Electrician', value: 'electrician' },
+	{ label: 'Dog Walker', value: 'dog walker' },
+	{ label: 'Dog Groomer', value: 'dog groomer' },
+	{ label: 'Salonist', value: 'salonist' },
+	{ label: 'Masseuse', value: 'masseuse' },
+	{ label: 'Music Teacher', value: 'music teacher' },
 ];
 
 /**
@@ -55,7 +56,13 @@ const Dashboard = () => {
 						options={services}
 						onChange={setSelectedService}
 						defaultValue={selectedService}
+						isClearable={true}
 					/>
+					{selectedService ? (
+						<ServiceDisplay selected={selectedService.value} />
+					) : (
+						<p className='hidden'>Select a service</p>
+					)}
 				</section>
 			</main>
 		</div>
