@@ -6,7 +6,7 @@ import { useState } from 'react';
 import axios from 'axios';
 import { useCookies } from 'react-cookie';
 
-const Signup = ({ mode, setWorkAround }) => {
+const Signup = ({ mode }) => {
 	const router = useRouter();
 	const [cookie, setCookie] = useCookies(['user']);
 	const [name, setName] = useState('');
@@ -46,7 +46,6 @@ const Signup = ({ mode, setWorkAround }) => {
 					console.log(res.data);
 					console.log(res.headers);
 					setLoading(false);
-					setWorkAround(password);
 					setCookie('name', name, {
 						sameSite: 'strict',
 						path: '/',

@@ -6,10 +6,10 @@ import Link from 'next/link';
 
 const Navbar = ({ title, to }) => {
 	return (
-		<nav className='bg-gray-300'>
+		<nav className='bg-black px-8 mx-auto text-slate-200'>
 			<div className='mx-auto py-5 flex items-center justify-between'>
 				<Logo />
-				<div className='hidden md:flex items-center space-x-9 text-gray-500'>
+				<div className='hidden md:flex items-center space-x-9'>
 					<Link href={to}>
 						<a>{title}</a>
 					</Link>
@@ -38,7 +38,7 @@ const Navbar = ({ title, to }) => {
 					</button>
 				</div>
 			</div>
-			<div className='mobile-menu hidden md:hidden flex flex-col items-end space-y-2 px-9 text-sm'>
+			<div className='mobile-menu hidden md:hidden flex flex-col items-end space-y-2 px-9 mb-3 pb-3 text-sm'>
 				<Link href={to}>
 					<a>{title}</a>
 				</Link>
