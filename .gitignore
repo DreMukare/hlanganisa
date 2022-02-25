@@ -110,6 +110,3 @@ dist
 # pycache files
 __pycache__/
 
-# images
-*.jpg
-*.png

@@ -4,7 +4,7 @@ import Link from 'next/link';
 
 // flex flex-row flex-nowrap items-center
 
-const Navbar = ({ title, to }) => {
+const Navbar = ({ title, to, id }) => {
 	return (
 		<nav className='bg-black px-8 mx-auto text-slate-200'>
 			<div className='mx-auto py-5 flex items-center justify-between'>
@@ -39,9 +39,11 @@ const Navbar = ({ title, to }) => {
 				</div>
 			</div>
 			<div className='mobile-menu hidden md:hidden flex flex-col items-end space-y-2 px-9 mb-3 pb-3 text-sm'>
-				<Link href={to}>
-					<a>{title}</a>
-				</Link>
+				{title && to && (
+					<Link href={to}>
+						<a>{title}</a>
+					</Link>
+				)}
 				<LogoutBtn />
 			</div>
 		</nav>

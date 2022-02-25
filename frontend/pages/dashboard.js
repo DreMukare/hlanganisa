@@ -26,7 +26,7 @@ const services = [
  */
 
 const Dashboard = () => {
-	const [selectedService, setSelectedService] = useState(null);
+	const [selectedService, setSelectedService] = useState();
 	const [cookie, setCookie] = useCookies(['user']);
 	const { name, email, authToken, id } = cookie;
 	const router = useRouter();
@@ -43,7 +43,7 @@ const Dashboard = () => {
 				<title>{name}'s Dashboard</title>
 			</Head>
 
-			<Navbar title='Profile' to='/profile' />
+			<Navbar to={`/profile/${id}`} title='Profile' />
 
 			<main className='px-8 mt-3 mx-auto scroll-smooth'>
 				<Greeting name={name} />
