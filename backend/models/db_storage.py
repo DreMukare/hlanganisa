@@ -4,14 +4,18 @@ import redis
 import uuid
 import base64
 import models
+from dotenv import load_dotenv
 from datetime import timedelta
 from PIL import Image
 from models.base_model import BaseModel, Base
 from models.user import User
 from models.post import Review, Request
-from os import getenv, path, listdir
+from os import getenv, path, listdir, environ
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
+
+basedir = path.abspath(path.dirname(__file__))
+load_dotenv(path.join(basedir, '.env'))
 
 classes = {"User": User, "Review": Review, "Request": Request}
 
@@ -28,11 +32,11 @@ class DBStorage:
         HOST = getenv('HOST') or '127.0.0.1'
         DB = getenv('DB') or 'hlanganisa'
         ENV = getenv('ENV')
-        self.__engine = create_engine('mysql+mysqldb://{}:{}@{}/{}'.
-                                      format(MY_USER,
-                                             PWD,
-                                             HOST,
-                                             DB))
+        MYSQL_DATABASE_URI = environ.get('SQLALCHEMY_DATABASE_URI')
+        # DB_CONN = f'mysql+mysqldb://{MY_USER}:{PWD}@{HOST}/{DB}'
+        # self.__engine = create_engine(DB_CONN)
+        self.__engine = create_engine(MYSQL_DATABASE_URI)
+
         if ENV == "test":
             Base.metadata.drop_all(self.__engine)
 
@@ -136,6 +140,7 @@ class DBStorage:
         Retrieve all active requests
         """
         reqs = self.__session.query(Request).filter_by(status='active').all()
+        reqs = [r.to_dict() for r in reqs]
         return reqs
 
 
@@ -213,11 +218,10 @@ class RedisCache:
         self.redis_set = 'Login'
         #self._redis.flushdb()
 
-    def store(self, data, expire=timedelta(hours=24)) -> str:
+    def store(self, key, data, expire=timedelta(hours=24)) -> str:
         """
         Store data and return key to access the data
         """
-        key = str(uuid.uuid4())
         self._redis.setex(key, expire, data)
         return key
 

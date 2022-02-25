@@ -113,3 +113,6 @@ __pycache__/
 # images
 *.jpg
 *.png
+
+#env files
+.env

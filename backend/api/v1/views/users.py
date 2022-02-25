@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """ Handle RESTFul API actions for users """
 import jwt
+import json
 import bcrypt
 import logging
 from os import path, mkdir
@@ -28,6 +29,23 @@ def hash_password(password):
     salt = bcrypt.gensalt()
     hashed = bcrypt.hashpw(password.encode('utf-8'), salt)
     return hashed
+
+
+def retrieve_values(key):
+    """
+    Retrieve values from redis cache
+    """
+    user = redis_cache.get(key)
+    if user is None:
+        user = storage.get(User, key)
+        if not user:
+            return None
+        user_data = user.to_dict()
+        j_user_data = json.dumps(user_data)
+        redis_cache.store(key, j_user_data)
+    else:
+        user_data = user
+    return user_data
 
 
 @app_views.route('/users', methods=['GET'], strict_slashes=False)
@@ -71,10 +89,9 @@ def get_user(user_id):
         decoded = jwt.decode(token, key, algorithms="HS256")
     except Exception:
         abort(401, "Not logged in")
-    user = storage.get(User, user_id)
-    if not user:
+    user_data = retrieve_values(user_id)
+    if user_data is None:
         abort(404)
-    user_data = user.to_dict()
     return jsonify(user_data)
 
 
