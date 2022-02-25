@@ -51,6 +51,11 @@ const Signup = ({ mode }) => {
 						path: '/',
 						expires: new Date(new Date().getTime() + 86400 * 1000),
 					});
+					setCookie('type', res.data.type, {
+						sameSite: 'strict',
+						path: '/',
+						expires: new Date(new Date().getTime() + 86400 * 1000),
+					});
 					setCookie('email', email, {
 						sameSite: 'strict',
 						path: '/',

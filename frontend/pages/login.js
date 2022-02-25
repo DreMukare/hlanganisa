@@ -49,6 +49,11 @@ const Login = () => {
 						path: '/',
 						expires: new Date(new Date().getTime() + 86400 * 1000),
 					});
+					setCookie('type', res.data.type, {
+						sameSite: 'strict',
+						path: '/',
+						expires: new Date(new Date().getTime() + 86400 * 1000),
+					});
 					setCookie('email', res.data.email, {
 						sameSite: 'strict',
 						path: '/',
@@ -96,7 +101,7 @@ const Login = () => {
 					Welcome back
 				</h1>
 
-				<form onSubmit={handleSubmit} className='w-4/6 md:w-1/6 mx-auto my-56'>
+				<form onSubmit={handleSubmit} className='w-4/6 md:w-1/6 mx-auto py-56'>
 					<div className='mb-8'>
 						<label htmlFor='email'>Email</label>
 						<input

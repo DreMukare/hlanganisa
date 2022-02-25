@@ -1,9 +1,11 @@
+import { useRouter } from 'next/router';
 import { useCookies } from 'react-cookie';
 import axios from 'axios';
 
 const LogoutBtn = () => {
 	const [cookie, setCookie, removeCookie] = useCookies(['user']);
 	const { authToken } = cookie;
+	const router = useRouter();
 
 	const handleClick = () => {
 		axios
@@ -19,6 +21,7 @@ const LogoutBtn = () => {
 			.then((res) => {
 				if (res.status === 200) {
 					removeCookie('user');
+					router.push('/login');
 				}
 			})
 			.catch((err) => console.log(err));

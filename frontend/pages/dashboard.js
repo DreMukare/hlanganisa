@@ -6,6 +6,7 @@ import Select from 'react-select';
 import Navbar from '../components/navbar';
 import Greeting from '../components/greeting';
 import ServiceDisplay from '../components/serviceDisplay';
+import SectionHeading from '../components/sectionHeading';
 
 const services = [
 	{ label: 'Plumber', value: 'plumber' },
@@ -40,16 +41,16 @@ const Dashboard = () => {
 	return (
 		<div>
 			<Head>
-				<title>{name}'s Dashboard</title>
+				<title>{name && `${name}'s`} Dashboard</title>
 			</Head>
 
 			<Navbar to={`/profile/${id}`} title='Profile' />
 
 			<main className='px-8 mt-3 mx-auto scroll-smooth'>
-				<Greeting name={name} />
+				<Greeting name={name && name.split(' ')[0]} />
 
 				<section className='my-5'>
-					<h2 className='text-xl text-indigo-700 mb-2'>Services list</h2>
+					<SectionHeading text='Select Service' />
 					<p className='mb-2'>Select the service you need</p>
 					<Select
 						className='mb-2'
