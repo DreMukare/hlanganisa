@@ -23,8 +23,9 @@ This project is interpreted/tested on VERSION="20.04.4 LTS (Focal Fossa)"
 
 * Clone this repository: `git@github.com:DreMukare/hlanganisa.git`
 * Access hlanganisa: `cd hlanganisa`
-* 
-*
+* Install python dependency packages: `pip -r install requirements.txt`
+* Access frontend directory: `cd frontend`
+* Install frontend dependencies: `npm install`
 
 ## File Descriptions
 
@@ -85,8 +86,8 @@ No Known bugs at this time
 
 # Authors
 Eugene Muthui 
-Andrew Mukuri
-Kibi
+Andrew Mukare
+Kibi Chane
 Millicent Malinga
 Fraol Tesfaye
 
