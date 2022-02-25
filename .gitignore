@@ -110,3 +110,5 @@ dist
 # pycache files
 __pycache__/
 
+#env files
+.env

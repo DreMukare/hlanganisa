@@ -4,10 +4,14 @@ Flask Application
 """
 import logging
 from api.v1.views import app_views
+from dotenv import load_dotenv
 from os import environ, makedirs, path
 from flask import Flask, jsonify, make_response
 from flask_cors import CORS
 from models import storage, redis_cache
+
+basedir = path.abspath(path.dirname(__file__))
+load_dotenv(path.join(basedir, '.env'))
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -20,9 +24,10 @@ file_handler.setFormatter(formatter)
 logger.addHandler(file_handler)
 
 app = Flask(__name__)
+app.config.from_object('config.DevConfig')
 cors = CORS(app)
-app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
-app.config['SECRET_KEY'] = '1234'
+# app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
+# app.config['SECRET_KEY'] = '1234'
 
 app.register_blueprint(app_views)
 

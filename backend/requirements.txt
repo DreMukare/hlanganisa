@@ -7,3 +7,4 @@ redis
 Flask
 flask-cors
 PyJWT
+python-dotenv

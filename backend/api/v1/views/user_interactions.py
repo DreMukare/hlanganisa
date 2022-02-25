@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """ Handle endpoints for user interactions """
 import jwt
+import json
 import bcrypt
 import logging
 from models.user import User
@@ -19,6 +20,20 @@ file_handler.setFormatter(formatter)
 
 logger.addHandler(file_handler)
 
+
+def retrieve_values(class_name, key):
+    """
+    Retrieve values from redis cache
+    """
+    value_data = redis_cache.get(key)
+    if value_data is None:
+        value = storage.get(class_name, key)
+        if not value:
+            return None
+        value_data = value.to_dict()
+        j_value_data = json.dumps(value_data)
+        redis_cache.store(key, j_value_data)
+    return value_data
 
 @app_views.route('/reviews', methods=['POST'], strict_slashes=False)
 def post_review():
@@ -117,11 +132,11 @@ def get_review(review_id):
     if not user:
         abort(404)
 
-    review = storage.get(Review, review_id)
-    if not review:
+    review_data = retrieve_values(Review, review_id)
+    if review_data is None:
         abort(404)
 
-    return jsonify(review.to_dict())
+    return jsonify(review_data)
 
 
 @app_views.route('/reviews/<review_id>', methods=['PUT'], strict_slashes=False)
@@ -239,16 +254,6 @@ def post_request():
     return make_response(jsonify(my_request.to_dict()), 201)
 
 
-def get_active_requests():
-    """
-    Retrieve all requests that are active
-    """
-    requests = storage.all(Request).values()
-    active_requests = [req.to_dict() for req in requests
-                       if req.status == 'active']
-    return active_requests
-
-
 @app_views.route('/requests', methods=['GET'], strict_slashes=False)
 def get_requests():
     """ Retrieve all the requests that are still active"""
@@ -296,11 +301,11 @@ def get_request(request_id):
     if not user:
         abort(404)
 
-    my_request = storage.get(Request, request_id)
-    if not my_request:
+    my_request_data = retrieve_values(Request, request_id)
+    if my_request_data is None:
         abort(404)
 
-    return jsonify(my_request.to_dict())
+    return jsonify(my_request_data)
 
 
 @app_views.route('/requests/<request_id>', methods=['PUT'],
