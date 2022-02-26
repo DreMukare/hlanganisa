@@ -2,23 +2,13 @@ import { useState, useEffect } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useCookies } from 'react-cookie';
-import Select from 'react-select';
 import Navbar from '../components/navbar';
 import Greeting from '../components/greeting';
-import ServiceDisplay from '../components/serviceDisplay';
-import SectionHeading from '../components/sectionHeading';
-
-const services = [
-	{ label: 'Plumber', value: 'plumber' },
-	{ label: 'Cleaner', value: 'cleaner' },
-	{ label: 'Cook', value: 'cook' },
-	{ label: 'Electrician', value: 'electrician' },
-	{ label: 'Dog Walker', value: 'dog walker' },
-	{ label: 'Dog Groomer', value: 'dog groomer' },
-	{ label: 'Salonist', value: 'salonist' },
-	{ label: 'Masseuse', value: 'masseuse' },
-	{ label: 'Music Teacher', value: 'music teacher' },
-];
+import UnfulfilledRequests from '../components/unfulfilledRequests';
+import MakeRequest from '../components/makeRequest';
+import ServiceSelector from '../components/serviceSelector';
+import CustomerSatisfaction from '../components/customerSatisfaction';
+import AvailableRequests from '../components/availableRequests';
 
 /**
  * Todo:
@@ -27,9 +17,8 @@ const services = [
  */
 
 const Dashboard = () => {
-	const [selectedService, setSelectedService] = useState();
 	const [cookie, setCookie] = useCookies(['user']);
-	const { name, email, authToken, id } = cookie;
+	const { name, email, authToken, id, type } = cookie;
 	const router = useRouter();
 
 	useEffect(() => {
@@ -46,25 +35,20 @@ const Dashboard = () => {
 
 			<Navbar to={`/profile/${id}`} title='Profile' />
 
-			<main className='px-8 mt-3 mx-auto scroll-smooth'>
+			<main className='px-8 mt-3 lg:px-96 mx-auto scroll-smooth'>
 				<Greeting name={name && name.split(' ')[0]} />
-
-				<section className='my-5'>
-					<SectionHeading text='Select Service' />
-					<p className='mb-2'>Select the service you need</p>
-					<Select
-						className='mb-2'
-						options={services}
-						onChange={setSelectedService}
-						defaultValue={selectedService}
-						isClearable={true}
-					/>
-					{selectedService ? (
-						<ServiceDisplay selected={selectedService.value} />
-					) : (
-						<p className='hidden'>Select a service</p>
-					)}
-				</section>
+				{type === 'client' ? (
+					<div>
+						<ServiceSelector />
+						<UnfulfilledRequests />
+						<MakeRequest />
+					</div>
+				) : (
+					<div>
+						<CustomerSatisfaction />
+						<AvailableRequests />
+					</div>
+				)}
 			</main>
 		</div>
 	);

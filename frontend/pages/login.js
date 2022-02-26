@@ -69,6 +69,11 @@ const Login = () => {
 						path: '/',
 						expires: new Date(new Date().getTime() + 86400 * 1000),
 					});
+					setCookie('rating', res.data.rating_count, {
+						sameSite: 'strict',
+						path: '/',
+						expires: new Date(new Date().getTime() + 86400 * 1000),
+					});
 					router.push('/dashboard');
 				}
 			})

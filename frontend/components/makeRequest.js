@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import axios from 'axios';
 import { useCookies } from 'react-cookie';
-import SectionHeading from '../../components/sectionHeading';
+import SectionHeading from './sectionHeading';
 
 const MakeRequest = () => {
 	const [category, setCategory] = useState();
@@ -41,7 +41,7 @@ const MakeRequest = () => {
 
 	return (
 		<>
-			<section>
+			<section className='mt-12'>
 				<SectionHeading text='Make a request' />
 				<form onSubmit={handleSubmit}>
 					<div className='mb-8'>

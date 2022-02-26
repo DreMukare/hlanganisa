@@ -27,7 +27,7 @@ const AvailableRequests = () => {
 	}, []);
 
 	return (
-		<div>
+		<div className='mb-12'>
 			<SectionHeading text='Available Requests' />
 			{/*[{ id : b3ert72c-a974-412c-8e4p-240uy973fchj, user_id: b3ert72c-a974-412c-8e4p-240uy973fchj, category: "pet services", content: "Need a dog groomer good with large dogs", status: "active" }]*/}
 			{requests ? (

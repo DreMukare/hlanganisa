@@ -48,11 +48,11 @@ const UnfulfilledRequests = () => {
 	};
 
 	return (
-		<div>
+		<div className='mt-12'>
 			<SectionHeading text='Unfulfilled Requests' />
 			{/*[{ id : b3ert72c-a974-412c-8e4p-240uy973fchj, user_id: b3ert72c-a974-412c-8e4p-240uy973fchj, category: "pet services", content: "Need a dog groomer good with large dogs", status: "active" }]*/}
 			{requests ? (
-				<p className='text-lg'>You haven't made any requests yet.</p>
+				<p>You haven't made any requests yet.</p>
 			) : (
 				<div>
 					{requests?.map(({ id, category, content }) => (

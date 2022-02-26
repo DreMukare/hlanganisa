@@ -49,7 +49,7 @@ const Profile = ({ mode }) => {
 
 			<Navbar to='' href='' />
 
-			<main className='mt-5 px-8 mx-auto'>
+			<main className='mt-5 px-8 md:px-[12rem] lg:px-[36rem] mx-auto'>
 				<Link href='/dashboard'>
 					<a className='mb-12'>
 						<svg
@@ -100,13 +100,13 @@ const Profile = ({ mode }) => {
 						<p className='text-2xl'>
 							<span className='font-extrabold'>{user?.rates}</span> per hour
 						</p>
-						<p className='text-2xl'>
+						<p className='text-2xl mb-12'>
 							Located in{' '}
 							<span className='font-extrabold'>{user?.location}</span>
 						</p>
 						<SectionHeading text='About Me' />
-						<p>{user && user?.description}</p>
-						{user?.work_images && (
+						<p className='mb-12'>{user && user?.description}</p>
+						{user.work_images.length > 0 && (
 							<section>
 								<SectionHeading text='Pictures of my work' />
 								<div className='flex flex-wrap gap-4'>
@@ -126,26 +126,30 @@ const Profile = ({ mode }) => {
 					</section>
 				)}
 
-				<section className='mx-auto mt-24 min-w-100 flex flex-col items-center'>
+				<section className='mx-auto mt-16 min-w-100 flex flex-col items-center'>
 					<div className='w-full'>
-						<p>Contact via phone</p>
+						<p>
+							Contact via phone (Click button to copy phone number to clipboard)
+						</p>
 						<Button
+							tooltip='Click to copy to clipboard'
 							text={user && user.phone_no}
 							onClick={() => {
 								user.phone_no &&
 									navigator.clipboard.writeText(user && user.phone_no);
 							}}
-							style='bg-black text-white rounded-lg h-11 hover:w-4/6 hover:h-14 transform-all ease-in-out duration-700 object-center hover:text-xl mb-9'
+							style='bg-black text-white rounded-lg h-11 w-[24rem] hover:w-4/6 hover:h-14 transform-all ease-in-out duration-700 object-center hover:text-xl mb-9'
 						/>
 					</div>
-					<div className='w-full'>
-						<p>Contact via email</p>
+					<div className='w-full mb-14'>
+						<p>Contact via email (Click button to copy email to clipboard)</p>
 						<Button
+							tooltip='Click to copy to clipboard'
 							text={user?.email}
 							onClick={() => {
 								navigator.clipboard.writeText(user?.email);
 							}}
-							style='bg-black text-white rounded-lg h-11 hover:w-4/6 hover:h-14 transform-all ease-in-out duration-700 object-center hover:text-xl'
+							style='bg-black text-white rounded-lg h-11 w-[24rem] hover:w-4/6 hover:h-14 transform-all ease-in-out duration-700 object-center hover:text-xl'
 						/>
 					</div>
 				</section>

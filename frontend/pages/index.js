@@ -39,9 +39,9 @@ export default function Home({ setAppMode, mode }) {
 				</div>
 			</nav>
 			<main className='h-100'>
-				<section className='px-11 mt-80 mx-auto'>
+				<section className='px-11 mt-80 mx-auto md:px-24'>
 					<h1 className='font-bold text-4xl text-left'>CONNECT AND SHARE</h1>
-					<p className='w-3/4'>
+					<p className='w-3/4 md:1/4'>
 						Hlanganisa is a community for professionals to interact with clients
 						and showcase their services.
 					</p>
@@ -49,12 +49,12 @@ export default function Home({ setAppMode, mode }) {
 						<Button
 							onClick={handleClickService}
 							text='Join as a service provider'
-							style='border text-white bg-black text-lg hover:mt-3 hover:text-3xl hover:mb-6 hover:w-[36rem] hover:h-24 transform-all ease-in-out duration-700'
+							style='border text-white bg-black text-lg hover:mt-3 hover:text-3xl hover:mb-6 w-[30rem] hover:w-[36rem] hover:h-24 transform-all ease-in-out duration-700'
 						/>
 						<Button
 							onClick={handleClickClient}
 							text='Join as a client'
-							style='border text-white bg-black text-lg hover:mt-6 hover:text-3xl hover:w-[36rem] hover:h-24 transform-all ease-in-out duration-700'
+							style='border text-white bg-black text-lg hover:mt-6 hover:text-3xl w-[30rem] hover:w-[36rem] hover:h-24 transform-all ease-in-out duration-700'
 						/>
 					</div>
 				</section>
