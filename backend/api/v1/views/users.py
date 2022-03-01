@@ -208,7 +208,7 @@ def put_user(user_id):
             image = image_storage.process_incoming_image(value)
             image_path = image_storage.generate_path('profile',
                                                      user_id, root_path)
-            size = 125
+            size = 200
             image_storage.save_image(size, image_path, image)
             setattr(user, key, image_path)
         if key == 'work_images' and type == 'service provider':
