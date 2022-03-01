@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useCookies } from 'react-cookie';
 import SectionHeading from './sectionHeading';
 
-const MakeRequest = () => {
+const MakeRequest = ({ toggleGetRequest }) => {
 	const [category, setCategory] = useState();
 	const [content, setContent] = useState();
 	const [contentCount, setContentCount] = useState(0);
@@ -11,12 +11,21 @@ const MakeRequest = () => {
 	const [cookie, setCookie] = useCookies(['user']);
 	const { authToken, type } = cookie;
 
-	const handleSubmit = () => {
+	const { id } = cookie;
+
+	const handleSubmit = (e) => {
+		e.preventDefault();
+
 		setLoading(true);
 		axios
 			.post(
 				`http://192.168.100.109:5000/api/v1/requests`,
-				{ content: content, category: category, status: 'active' },
+				JSON.stringify({
+					user_id: id,
+					content: content,
+					category: category,
+					status: 'active',
+				}),
 				{
 					headers: {
 						'Content-Type': 'application/json',
@@ -31,6 +40,7 @@ const MakeRequest = () => {
 				console.log(res.data);
 				setCategory('');
 				setContent('');
+				toggleGetRequest(true);
 				setLoading(false);
 			})
 			.catch((err) => {
@@ -41,21 +51,23 @@ const MakeRequest = () => {
 
 	return (
 		<>
-			<section className='mt-12'>
+			<section className='mt-12 mb-9'>
 				<SectionHeading text='Make a request' />
 				<form onSubmit={handleSubmit}>
 					<div className='mb-8'>
 						<label htmlFor='category'>Category</label>
 						<input
-							onChange={(e) => setCategory(e.target.value)}
+							onChange={(e) => {
+								setCategory(e.target.value);
+							}}
 							className='mt-2
                 w-full
                 px-4
                 border-0 border-b-2 border-gray-400
                 focus:ring-0 focus:border-black'
-							type='email'
-							name='email'
-							id='email'
+							type='text'
+							name='text'
+							id='category'
 							placeholder='Change the category of the request'
 							autoComplete='on'
 							required

@@ -13,6 +13,7 @@ const services = [
 	{ label: 'Salonist', value: 'salonist' },
 	{ label: 'Masseuse', value: 'masseuse' },
 	{ label: 'Music Teacher', value: 'music teacher' },
+	{ label: 'Other', value: 'other' },
 ];
 
 const ServiceSelector = () => {

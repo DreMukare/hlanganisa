@@ -18,8 +18,11 @@ import AvailableRequests from '../components/availableRequests';
 
 const Dashboard = () => {
 	const [cookie, setCookie] = useCookies(['user']);
+	const [makeGetRequest, setMakeGetRequest] = useState(false);
 	const { name, email, authToken, id, type } = cookie;
 	const router = useRouter();
+
+	const toggleGetRequest = (condition) => setMakeGetRequest(condition);
 
 	useEffect(() => {
 		if (!authToken) {
@@ -40,8 +43,14 @@ const Dashboard = () => {
 				{type === 'client' ? (
 					<div>
 						<ServiceSelector />
-						<UnfulfilledRequests />
-						<MakeRequest />
+						<UnfulfilledRequests
+							makeGetRequest={makeGetRequest}
+							toggleGetRequest={toggleGetRequest}
+						/>
+						<MakeRequest
+							makeGetRequest={makeGetRequest}
+							toggleGetRequest={toggleGetRequest}
+						/>
 					</div>
 				) : (
 					<div>

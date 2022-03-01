@@ -30,25 +30,24 @@ const AvailableRequests = () => {
 		<div className='mb-12'>
 			<SectionHeading text='Available Requests' />
 			{/*[{ id : b3ert72c-a974-412c-8e4p-240uy973fchj, user_id: b3ert72c-a974-412c-8e4p-240uy973fchj, category: "pet services", content: "Need a dog groomer good with large dogs", status: "active" }]*/}
-			{requests ? (
-				<p className='text-lg'>
-					Currently, there are no available requests. Check back later.
-				</p>
-			) : (
-				<div>
-					{requests?.map(({ id, category, content }) => (
-						<div>
+
+			<div>
+				{requests?.length > 0 &&
+					requests?.map(({ id, category, content }) => (
+						<div
+							key={id}
+							className='p-6 rounded-md shadow-lg mb-3 bg-white w-[22rem] max-w-sm w-[24rem] hover:-translate-y-3 transform-all ease-in-out duration-700'
+						>
 							<h3 className='text-extrabold text-xl'>
 								{category.charAt(0).toUpperCase() + category.slice(1)}
 							</h3>
-							<p className='text-lg max-w-prose'>{content}</p>
+							<p className='text-lg max-w-prose mb-4'>{content}</p>
 							<Link href={`request/${id}`}>
-								<a>View request page</a>
+								<a className='underline'>View request page</a>
 							</Link>
 						</div>
 					))}
-				</div>
-			)}
+			</div>
 		</div>
 	);
 };

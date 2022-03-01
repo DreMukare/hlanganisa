@@ -4,7 +4,7 @@ import SectionHeading from './sectionHeading';
 import { useCookies } from 'react-cookie';
 import axios from 'axios';
 
-const UnfulfilledRequests = () => {
+const UnfulfilledRequests = ({ makeGetRequest, toggleGetRequest }) => {
 	const [requests, setRequests] = useState();
 	const [cookie, setCookie] = useCookies(['user']);
 	const { authToken, id } = cookie;
@@ -21,10 +21,11 @@ const UnfulfilledRequests = () => {
 				},
 			})
 			.then((res) => {
+				toggleGetRequest(false);
 				setRequests(res.data);
 			})
 			.catch((err) => console.log(err));
-	}, []);
+	}, [makeGetRequest]);
 
 	const handleClick = (id) => {
 		axios
@@ -42,6 +43,7 @@ const UnfulfilledRequests = () => {
 				}
 			)
 			.then((res) => {
+				toggleGetRequest(true);
 				setRequests(res.data);
 			})
 			.catch((err) => console.log(err));
@@ -50,27 +52,29 @@ const UnfulfilledRequests = () => {
 	return (
 		<div className='mt-12'>
 			<SectionHeading text='Unfulfilled Requests' />
-			{/*[{ id : b3ert72c-a974-412c-8e4p-240uy973fchj, user_id: b3ert72c-a974-412c-8e4p-240uy973fchj, category: "pet services", content: "Need a dog groomer good with large dogs", status: "active" }]*/}
-			{requests ? (
-				<p>You haven't made any requests yet.</p>
-			) : (
-				<div>
-					{requests?.map(({ id, category, content }) => (
-						<div>
+
+			<div>
+				{requests?.length > 0 &&
+					requests?.map(({ id, category, content }) => (
+						<div
+							key={id}
+							className='p-6 rounded-md shadow-lg mb-3 bg-white w-[22rem] max-w-sm w-[24rem] hover:-translate-y-3 transform-all ease-in-out duration-700'
+						>
 							<h3 className='text-extrabold text-xl'>
 								{category.charAt(0).toUpperCase() + category.slice(1)}
 							</h3>
-							<p className='text-lg max-w-prose'>{content}</p>
-							<button onClick={() => handleClick(id)}>
-								Click to mark as fulfilled
-							</button>
-							<Link href={`request/${id}`}>
-								<a>Edit request</a>
-							</Link>
+							<p className='text-lg max-w-prose mt-3'>{content}</p>
+							<div className='flex gap-3 justify-between mt-2'>
+								<button className='underline' onClick={() => handleClick(id)}>
+									Click to mark as fulfilled
+								</button>
+								<Link href={`request/${id}`}>
+									<a className='underline'>Edit request</a>
+								</Link>
+							</div>
 						</div>
 					))}
-				</div>
-			)}
+			</div>
 		</div>
 	);
 };

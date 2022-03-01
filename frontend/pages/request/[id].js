@@ -1,24 +1,29 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
+import Link from 'next/link';
 import axios from 'axios';
 import { useCookies } from 'react-cookie';
 import SectionHeading from '../../components/sectionHeading';
+import Button from '../../components/button';
 
 const Request = () => {
 	const [category, setCategory] = useState();
 	const [content, setContent] = useState();
 	const [contentCount, setContentCount] = useState(0);
 	const [request, setRequest] = useState();
+	const [requestMakerId, setRequestMakerId] = useState('');
 	const [requestMaker, setRequestMaker] = useState('');
 	const router = useRouter();
 	const { id } = router.query;
 	const [cookie, setCookie] = useCookies(['user']);
 	const { authToken, type } = cookie;
 
-	if (!authToken) {
-		router.push('/login');
-	}
+	useEffect(() => {
+		if (!authToken) {
+			router.push('/login');
+		}
+	});
 
 	useEffect(() => {
 		axios
@@ -31,13 +36,18 @@ const Request = () => {
 					'X-Token': authToken,
 				},
 			})
-			.then((res) => setRequest(res.data))
+			.then((res) => {
+				setRequest(res.data);
+				setRequestMakerId(res.data.user_id);
+				console.log(res.data);
+				console.log(request);
+			})
 			.catch((err) => console.log(err));
 	}, []);
 
 	useEffect(() => {
 		axios
-			.get(`http://192.168.100.109:5000/api/v1/users/${request.user_id}`, {
+			.get(`http://192.168.100.109:5000/api/v1/users/${requestMakerId}`, {
 				headers: {
 					'Content-Type': 'application/json',
 					'Access-Control-Allow-Origin': '*',
@@ -46,15 +56,20 @@ const Request = () => {
 					'X-Token': authToken,
 				},
 			})
-			.then((res) => setRequestMaker(res.data))
+			.then((res) => {
+				setRequestMaker(res.data);
+				console.log('running now');
+			})
 			.catch((err) => console.log(err));
-	});
+	}, [requestMakerId]);
 
-	const handleSubmit = () => {
+	const handleSubmit = (e) => {
+		e.preventDefault();
+
 		axios
 			.put(
 				`http://192.168.100.109:5000/api/v1/requests/${request.user_id}`,
-				{ content: content, category: category },
+				JSON.stringify({ content: content, category: category }),
 				{
 					headers: {
 						'Content-Type': 'application/json',
@@ -79,7 +94,7 @@ const Request = () => {
 				<Link href='/dashboard'>
 					<a className='mb-12'>
 						<svg
-							className='w-7 h-7 hover:w-9 hover:h-9 transform-all ease-in-out duration-700'
+							className='w-7 h-7 mt-5 hover:w-9 hover:h-9 transform-all ease-in-out duration-700'
 							fill='none'
 							stroke='currentColor'
 							viewBox='0 0 24 24'
@@ -96,16 +111,20 @@ const Request = () => {
 				</Link>
 
 				{type === 'service provider' ? (
-					<h1>
-						Request by <span>{requestMaker.name}</span>
-					</h1>
+					<div>
+						{requestMakerId && (
+							<h1 className='text-3xl mb-5 mt-9'>
+								Request by <span>{requestMaker.name}</span>
+							</h1>
+						)}
+					</div>
 				) : (
-					<h1>{request.category}</h1>
+					<h1 className='text-4xl mt-9 mb-6'>{request?.category}</h1>
 				)}
 
-				<p>{request.content}</p>
+				<p className='text-xl max-w-prose mb-6'>{request?.content}</p>
 
-				{type === 'service provider' && (
+				{type === 'service provider' && requestMakerId && (
 					<section className='mx-auto mt-24 min-w-100 flex flex-col items-center'>
 						<div className='w-full'>
 							<p>Contact via phone</p>
@@ -117,7 +136,7 @@ const Request = () => {
 											requestMaker && requestMaker.phone_no
 										);
 								}}
-								style='bg-black text-white rounded-lg h-11 hover:w-4/6 hover:h-14 transform-all ease-in-out duration-700 object-center hover:text-xl mb-9'
+								style='bg-black text-white rounded-lg h-11 w-[20rem] hover:w-4/6 hover:h-14 transform-all ease-in-out duration-700 object-center hover:text-xl mb-9'
 							/>
 						</div>
 						<div className='w-full'>
@@ -127,7 +146,7 @@ const Request = () => {
 								onClick={() => {
 									navigator.clipboard.writeText(requestMaker?.email);
 								}}
-								style='bg-black text-white rounded-lg h-11 hover:w-4/6 hover:h-14 transform-all ease-in-out duration-700 object-center hover:text-xl'
+								style='bg-black text-white rounded-lg h-11 w-[20rem] hover:w-4/6 hover:h-14 transform-all ease-in-out duration-700 object-center hover:text-xl'
 							/>
 						</div>
 					</section>
@@ -146,9 +165,9 @@ const Request = () => {
                 px-4
                 border-0 border-b-2 border-gray-400
                 focus:ring-0 focus:border-black'
-									type='email'
-									name='email'
-									id='email'
+									type='text'
+									name='category'
+									id='category'
 									placeholder='Change the category of the request'
 									autoComplete='on'
 									required

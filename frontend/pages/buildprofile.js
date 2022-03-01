@@ -23,36 +23,46 @@ const BuildProfile = ({ mode }) => {
 	const [loading, setLoading] = useState(false);
 
 	const convertToBase64 = (file) => {
-		return new Promise((resolve, reject) => {
-			const fileReader = new FileReader();
-			fileReader.readAsDataURL(file);
-			fileReader.onload = () => {
-				resolve(fileReader.result);
-			};
-			fileReader.onerror = (error) => {
-				reject(error);
-			};
-		});
+		// return new Promise((resolve, reject) => {
+		// 	const fileReader = new FileReader();
+		// 	fileReader.readAsDataURL(file);
+		// 	fileReader.onload = () => {
+		// 		resolve(fileReader.result);
+		// 	};
+		// 	fileReader.onerror = (error) => {
+		// 		reject(error);
+		// 	};
+		// });
+		// const canvas = document.createElement('canvas');
+		// const context = canvas.getContext('2d');
+		// canvas.height = file.naturalHeight;
+		// canvas.width = file.naturalWidth;
+		// context.drawImage(file, 0, 0);
+		// return canvas.toDataURL('image/jpeg');
+
+		let reader = new FileReader();
+        reader.onloadend = function() {
+          document.write('RESULT: ', reader.result);
+        }
+        return reader.readAsDataURL(file);
 	};
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 
 		setLoading(true);
-
-		let encodedImage;
 		const encodedImages = [];
 
 		if (image) {
-			encodedImage = await convertToBase64(image);
+			// encodedImage = await convertToBase64(image);
 			console.log(image);
 		}
 
 		if (workImages) {
 			for (const image of workImages) {
-				let encoded = await convertToBase64(image);
-				encodedImages.push(encoded);
+				encodedImages.push(image);
 			}
+			console.log(workImages);
 		}
 
 		const dataToSend =
@@ -60,15 +70,16 @@ const BuildProfile = ({ mode }) => {
 				? {
 						phone_no: phone,
 						location,
-						profile_image: encodedImage,
+						profile_image: image,
 						category: job,
 						description: bio,
 						work_images: encodedImages,
 						rates: rate,
 				  }
-				: { phone_no: phone, location, profile_image: encodedImage };
+				: { phone_no: phone, location, profile_image: image };
 
 		const dataToSendJSON = JSON.stringify(dataToSend);
+		console.log(dataToSend);
 
 		const headers = {
 			'Content-Type': 'application/json',
@@ -96,19 +107,21 @@ const BuildProfile = ({ mode }) => {
 			});
 	};
 
-	const onImageChange = (e) => {
+	const onImageChange = async (e) => {
 		if (e.target.files && e.target.files[0]) {
-			setImage(e.target.files[0]);
+			const img = await convertToBase64(e.target.files[0]);
+			setImage(img);
 		}
 	};
 
-	const storeWorkImagesInState = (e) => {
+	const storeWorkImagesInState = async (e) => {
 		if (e.target.files) {
 			if (e.target.files.length > 4) {
 				alert('You can only upload up to 4 photos');
 			}
 			for (const image of e.target.files) {
-				setWorkImages((prevState) => [image, ...prevState]);
+				const img = await convertToBase64(image);
+				setWorkImages((prevState) => [img, ...prevState]);
 			}
 		}
 	};
@@ -152,17 +165,6 @@ const BuildProfile = ({ mode }) => {
 								accept='image/png, image/gif, image/jpeg'
 								onChange={onImageChange}
 							/>
-							{image && (
-								<div className='relative mt-4 w-64 h-64 mx-auto'>
-									<Image
-										src={URL.createObjectURL(image)}
-										alt='Your profile picture'
-										layout={'fill'}
-										objectFit={'contain'}
-										quality={100}
-									/>
-								</div>
-							)}
 						</div>
 						<div className='mb-7'>
 							{mode === 'client' ? (
@@ -259,22 +261,6 @@ const BuildProfile = ({ mode }) => {
 										onChange={(e) => setRate(e.target.value)}
 										required
 									/>
-									{/* workImages && (
-										<div className='flex mt-4 w-32 h-32 mx-auto'>
-											{workImages.map((image, index) => {
-												<li>
-													<Image
-														src={URL.createObjectURL(image)}
-														alt='A picture of your work'
-														layout={'fill'}
-														objectFit={'contain'}
-														quality={100}
-														key={index}
-													/>
-												</li>;
-											})}
-										</div>
-                    ) */}
 								</div>
 							</div>
 						)}
