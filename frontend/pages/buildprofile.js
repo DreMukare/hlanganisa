@@ -33,30 +33,18 @@ const BuildProfile = ({ mode }) => {
 				reject(error);
 			};
 		});
-
-		// let reader = new FileReader();
-		// reader.onloadend = function () {
-		// 	document.write('RESULT: ', reader.result);
-		// };
-		// reader.readAsDataURL(file);
-		// return reader.result;
 	};
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 
 		setLoading(true);
-		const encodedImages = [];
 
 		if (image) {
-			// encodedImage = await convertToBase64(image);
 			console.log(image);
 		}
 
 		if (workImages) {
-			// for (const image of workImages) {
-			// 	encodedImages.push(image);
-			// }
 			console.log(workImages);
 		}
 

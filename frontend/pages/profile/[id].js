@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import axios from 'axios';
 import useSWR from 'swr';
+import utf8 from 'utf8';
 import { useCookies } from 'react-cookie';
 import Navbar from '../../components/navbar';
 import SectionHeading from '../../components/sectionHeading';
@@ -33,28 +34,16 @@ const Profile = ({ mode }) => {
 	}
 
 	const convertToBase64 = (file) => {
-		// return new Promise((resolve, reject) => {
-		// 	const fileReader = new FileReader();
-		// 	fileReader.readAsDataURL(file);
-		// 	fileReader.onload = () => {
-		// 		resolve(fileReader.result);
-		// 	};
-		// 	fileReader.onerror = (error) => {
-		// 		reject(error);
-		// 	};
-		// });
-		// const canvas = document.createElement('canvas');
-		// const context = canvas.getContext('2d');
-		// canvas.height = file.naturalHeight;
-		// canvas.width = file.naturalWidth;
-		// context.drawImage(file, 0, 0);
-		// return canvas.toDataURL('image/jpeg');
-
-		let reader = new FileReader();
-		reader.onloadend = function () {
-			document.write('RESULT: ', reader.result);
-		};
-		return reader.readAsDataURL(file);
+		return new Promise((resolve, reject) => {
+			const fileReader = new FileReader();
+			fileReader.readAsDataURL(file);
+			fileReader.onload = () => {
+				resolve(fileReader.result.replace('data:', '').replace(/^.+,/, ''));
+			};
+			fileReader.onerror = (error) => {
+				reject(error);
+			};
+		});
 	};
 
 	const onImageChange = async (e) => {
@@ -193,13 +182,23 @@ const Profile = ({ mode }) => {
 				</div>
 				<section className='flex flex-col items-center gap-5 mt-5'>
 					<div className='rounded-full'>
-						<Image
-							src='/default_profile_picture.jpg'
-							alt='Profile picture'
-							height={200}
-							width={200}
-							className='rounded-full'
-						/>
+						{user?.profile_image ? (
+							<Image
+								src={`data:image/png;base64,${user?.profile_image}`}
+								alt="User's profile picture"
+								height={200}
+								width={300}
+								className='rounded-full'
+							/>
+						) : (
+							<Image
+								src='/default_profile_picture.jpg'
+								alt='Default profile picture'
+								height={200}
+								width={200}
+								className='rounded-full'
+							/>
+						)}
 					</div>
 					<div>
 						<h1 className='text-extrabold text-7xl'>
@@ -233,16 +232,16 @@ const Profile = ({ mode }) => {
 							<section>
 								<SectionHeading text='Pictures of my work' />
 								<div className='flex flex-wrap gap-4'>
-									{/* user.work_images &&
-										user.work_images?.map((img) => (
+									{user?.work_images &&
+										user?.work_images?.map((img, index) => (
 											<Image
-												src={img}
+												key={index}
+												src={`data:image/png;base64,${img}`}
 												alt='Work picture'
 												height={200}
 												width={200}
-												className='rounded-full'
 											/>
-										)) */}
+										))}
 								</div>
 							</section>
 						)}
