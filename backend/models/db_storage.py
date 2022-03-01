@@ -123,7 +123,7 @@ class DBStorage:
         """
         Retrieve all reviews that a user has received
         """
-        id = user_id
+        id = reviewee_id
         reviews = self.__session.query(Review).filter_by(reviewee_id=id).all()
         return reviews
 
@@ -198,7 +198,7 @@ class ImageStorage:
             List of image objects
         """
         images = []
-        file_names = list_dir(image_folder_path)
+        file_names = listdir(image_folder_path)
         for name in file_names:
             image_path = path.join(image_folder_path, name)
             images.append(self.get_image(image_path))
