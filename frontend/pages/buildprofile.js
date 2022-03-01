@@ -23,28 +23,23 @@ const BuildProfile = ({ mode }) => {
 	const [loading, setLoading] = useState(false);
 
 	const convertToBase64 = (file) => {
-		// return new Promise((resolve, reject) => {
-		// 	const fileReader = new FileReader();
-		// 	fileReader.readAsDataURL(file);
-		// 	fileReader.onload = () => {
-		// 		resolve(fileReader.result);
-		// 	};
-		// 	fileReader.onerror = (error) => {
-		// 		reject(error);
-		// 	};
-		// });
-		// const canvas = document.createElement('canvas');
-		// const context = canvas.getContext('2d');
-		// canvas.height = file.naturalHeight;
-		// canvas.width = file.naturalWidth;
-		// context.drawImage(file, 0, 0);
-		// return canvas.toDataURL('image/jpeg');
+		return new Promise((resolve, reject) => {
+			const fileReader = new FileReader();
+			fileReader.readAsDataURL(file);
+			fileReader.onload = () => {
+				resolve(fileReader.result.replace('data:', '').replace(/^.+,/, ''));
+			};
+			fileReader.onerror = (error) => {
+				reject(error);
+			};
+		});
 
-		let reader = new FileReader();
-        reader.onloadend = function() {
-          document.write('RESULT: ', reader.result);
-        }
-        return reader.readAsDataURL(file);
+		// let reader = new FileReader();
+		// reader.onloadend = function () {
+		// 	document.write('RESULT: ', reader.result);
+		// };
+		// reader.readAsDataURL(file);
+		// return reader.result;
 	};
 
 	const handleSubmit = async (e) => {
@@ -59,9 +54,9 @@ const BuildProfile = ({ mode }) => {
 		}
 
 		if (workImages) {
-			for (const image of workImages) {
-				encodedImages.push(image);
-			}
+			// for (const image of workImages) {
+			// 	encodedImages.push(image);
+			// }
 			console.log(workImages);
 		}
 
@@ -73,7 +68,7 @@ const BuildProfile = ({ mode }) => {
 						profile_image: image,
 						category: job,
 						description: bio,
-						work_images: encodedImages,
+						work_images: workImages,
 						rates: rate,
 				  }
 				: { phone_no: phone, location, profile_image: image };

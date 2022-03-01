@@ -23,8 +23,8 @@ class User(BaseModel, Base):
     rates = Column(Text, nullable=False, default='0')
     category = Column(String(20), nullable=False, default='other')
     description = Column(Text, nullable=True)
-    profile_image = Column(Text, nullable=True)
-    work_images = Column(String(100), nullable=True)
+    profile_image = Column(String(1024), nullable=True)
+    work_images = Column(String(1024), nullable=True)
     rating = Column(Float, nullable=False, default=0.0)
     rating_count = Column(Integer, nullable=False, default=0)
 

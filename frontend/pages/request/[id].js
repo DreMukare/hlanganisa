@@ -68,7 +68,7 @@ const Request = () => {
 
 		axios
 			.put(
-				`http://192.168.100.109:5000/api/v1/requests/${request.user_id}`,
+				`http://192.168.100.109:5000/api/v1/requests/${id}`,
 				JSON.stringify({ content: content, category: category }),
 				{
 					headers: {
@@ -80,7 +80,9 @@ const Request = () => {
 					},
 				}
 			)
-			.then((res) => console.log(res.data))
+			.then((res) => {
+				console.log(res.data);
+			})
 			.catch((err) => console.log(err));
 	};
 
@@ -166,6 +168,7 @@ const Request = () => {
                 border-0 border-b-2 border-gray-400
                 focus:ring-0 focus:border-black'
 									type='text'
+									value={category}
 									name='category'
 									id='category'
 									placeholder='Change the category of the request'
@@ -194,6 +197,7 @@ const Request = () => {
 									maxLength={250}
 									placeholder='Change the description of the request'
 									required
+									value={content}
 								></textarea>
 								<p className='text-sm font-secondary text-zinc-400'>
 									{contentCount}/250
