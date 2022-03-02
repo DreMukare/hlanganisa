@@ -174,7 +174,8 @@ class ImageStorage:
         output_size = (image_size, image_size)
         i = Image.open(image)
         #i.thumbnail(output_size)
-        i.save(image_path, "JPEG")
+        rgb_image = i.convert('RGB')
+        rgb_image.save(image_path, "JPEG")
 
     def get_image(self, image_path):
         """Retrieve an image from file storage and return it"""

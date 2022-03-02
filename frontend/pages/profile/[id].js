@@ -187,7 +187,7 @@ const Profile = ({ mode }) => {
 								src={`data:image/png;base64,${user?.profile_image}`}
 								alt="User's profile picture"
 								height={200}
-								width={300}
+								width={200}
 								className='rounded-full'
 							/>
 						) : (
