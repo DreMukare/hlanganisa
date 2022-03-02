@@ -24,10 +24,8 @@ file_handler.setFormatter(formatter)
 logger.addHandler(file_handler)
 
 app = Flask(__name__)
-app.config.from_object('config.DevConfig')
+app.config.from_object('config.ProdConfig')
 cors = CORS(app)
-# app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
-# app.config['SECRET_KEY'] = '1234'
 
 app.register_blueprint(app_views)
 

@@ -11,9 +11,9 @@ with open(image_file, "rb") as f:
     im_bytes = f.read()
 im_b64 = base64.b64encode(im_bytes).decode("utf8")
 
-headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
+headers = {'Content-type': 'application/json', 'Accept': 'text/plain', 'X-Token': sys.argv[3]}
 
-payload = json.dumps({"profile_image": im_b64})
+payload = json.dumps({"profile_image": im_b64, "rates": "30"})
 response = requests.put(api, data=payload, headers=headers)
 try:
     data = response.json()
