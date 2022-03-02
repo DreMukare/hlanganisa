@@ -116,3 +116,6 @@ __pycache__/
 
 #env files
 .env
+
+# work and profile images
+backend/api/v1/instance/*
