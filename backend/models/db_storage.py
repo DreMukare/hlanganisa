@@ -173,7 +173,7 @@ class ImageStorage:
         """
         output_size = (image_size, image_size)
         i = Image.open(image)
-        i.thumbnail(output_size)
+        #i.thumbnail(output_size)
         i.save(image_path, "JPEG")
 
     def get_image(self, image_path):
