@@ -163,7 +163,7 @@ class ImageStorage:
                                    user_id, f'image_{image_no}')
         return image_path
 
-    def save_image(self, image_size, image_path, image):
+    def save_image(self, image_path, image):
         """Generates a thumbnail of the required size and saves it at
            the path given
            Args:
@@ -171,10 +171,9 @@ class ImageStorage:
                image_path (int): path to store image at
                image (binary): the image file
         """
-        output_size = (image_size, image_size)
         i = Image.open(image)
-        #i.thumbnail(output_size)
-        i.save(image_path, "JPEG")
+        rgb_image = i.convert('RGB')
+        rgb_image.save(image_path, "JPEG")
 
     def get_image(self, image_path):
         """Retrieve an image from file storage and return it"""
