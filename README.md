@@ -85,10 +85,10 @@ This project is interpreted/tested on VERSION="20.04.4 LTS (Focal Fossa)"
 No Known bugs at this time
 
 # Authors
-Eugene Muthui 
-Andrew Mukare
-Kibi Chane
-Millicent Malinga
-Fraol Tesfaye
+- Eugene Muthui 
+- Andrew Mukare
+- Kibi Chane
+- Millicent Malinga
+- Fraol Tesfaye
 
 
