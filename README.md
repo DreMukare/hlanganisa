@@ -87,7 +87,7 @@ No Known bugs at this time
 # Authors
 - Eugene Muthui 
 - Andrew Mukare
-- Kibi Chane
+- Kibirt Chane
 - Millicent Malinga
 - Fraol Tesfaye
 
